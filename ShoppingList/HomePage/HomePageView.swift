@@ -9,20 +9,13 @@ import SwiftUI
 
 struct HomePageView: View {
     
-    
-    var items = [
-        ShoppingItem(name: "Milk", quantity: 1, description: "el mara3y liter w noss", isOn: true),
-        ShoppingItem(name: "Cheese", quantity: 2, description: "gebna romy b7bha", isOn: false),
-        ShoppingItem(name: "Oil", quantity: 3, description: "spray diet", isOn: true),
-        ShoppingItem(name: "Coffe", quantity: 4, description: "silaz aw abo ouf", isOn: false),
-        ShoppingItem(name: "Water", quantity: 6, description: "galon kbit", isOn: true),
-        ShoppingItem(name: "Biscts", quantity: 6, description: "b smsm", isOn: false)
-       ]
-    
+    @State private var showAddItemSheet: Bool = false
+    @StateObject private var viewModel = ShoppingListViewModel()
+
     var body: some View {
         NavigationView {
             List {
-                ForEach(items, id: \.name) { item in
+                ForEach(viewModel.notBoughtShoppingListItems, id: \.name) { item in
                     ShoppingItemRowView(item: item)
                         .listRowSeparator(.hidden)
 
@@ -34,9 +27,29 @@ struct HomePageView: View {
             .navigationTitle("Your Shopping List")
             .navigationBarTitleDisplayMode(.automatic)
         }
-       
+        .sheet(isPresented: $showAddItemSheet) {
+            AddItemView(shoppingItem: $viewModel.newItemToBeAdded, addItem: {
+                self.viewModel.addNewItem()
+            }).presentationDetents([.medium])
+        }
+        .safeAreaInset(edge: VerticalEdge.bottom) {
+            HStack(spacing: -15) {
+                Spacer()
+                Image(systemName: "plus").foregroundColor(.blue)
+                Button(action: {
+                    showAddItemSheet.toggle()
+                    }, label : {
+                        Text("Add New Item").padding(.all, 20).foregroundColor(.blue).bold()
+                    })
+                Spacer()
+            }
+            .background(Gradient(colors: [.white]))
+            .border(Color.black.opacity(0.2), width: 0.5)
+            .shadow(radius: 10)
+            .frame(height: 0)
+        }
+        
     }
-           
 }
 
 #Preview {

@@ -9,7 +9,11 @@ import Foundation
 
 struct ShoppingItem {
     var name: String
-    var quantity: Int
+    var quantity: String
     var description: String
     var isOn: Bool
+    
+    var isEmpty: Bool {
+         name.isEmpty && quantity.isEmpty
+    }
 }

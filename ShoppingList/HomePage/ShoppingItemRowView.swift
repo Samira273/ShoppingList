@@ -20,7 +20,7 @@ struct ShoppingItemRowView: View {
     var body: some View {
         VStack (spacing: 0) {
             HStack (spacing: 50) {
-                Text("\(item.quantity)" + "x " + item.name).bold()
+                Text(item.quantity + "x " + item.name).bold()
                 Toggle("", isOn: $isOn)
                       .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
             }
@@ -40,5 +40,5 @@ struct ShoppingItemRowView: View {
 }
 
 #Preview {
-    ShoppingItemRowView(item: ShoppingItem(name: "lorem", quantity: 1, description: "ibson", isOn: false))
+    ShoppingItemRowView(item: ShoppingItem(name: "lorem", quantity: "1", description: "ibson", isOn: false))
 }
