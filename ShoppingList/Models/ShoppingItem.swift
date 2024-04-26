@@ -8,6 +8,8 @@
 import Foundation
 
 struct ShoppingItem {
+    
+    let id = UUID().uuidString
     var name: String
     var quantity: String
     var description: String

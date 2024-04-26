@@ -11,7 +11,7 @@ struct AddItemView: View {
     @State private var formFields: [String] = Array(repeating: "", count: 3)
     @Environment(\.dismiss) var dismiss
     @Binding var shoppingItem: ShoppingItem
-    var addItem: () -> Void
+    var doneItem: () -> Void
 
     
     var body: some View {
@@ -27,7 +27,7 @@ struct AddItemView: View {
                 Text("Add Item").fontWeight(.semibold)
                 Spacer()
                 Button(action: {
-                    self.addItem()
+                    self.doneItem()
                     self.dismiss()
                 }, label: {
                     Text("Done").fontWeight(.semibold).padding(10)
@@ -82,7 +82,7 @@ struct AddItemView: View {
     struct Preview: View {
         @State var shoppingItem = ShoppingItem(name: "", quantity: "0", description: "", isOn: false)
         var body: some View {
-            AddItemView(shoppingItem: $shoppingItem, addItem: {})
+            AddItemView(shoppingItem: $shoppingItem, doneItem: {})
         }
     }
     return Preview()

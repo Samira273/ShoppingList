@@ -10,16 +10,24 @@ import SwiftUI
 struct HomePageView: View {
     
     @State private var showAddItemSheet: Bool = false
+    @State private var showEditItemSheet: Bool = false
     @StateObject private var viewModel = ShoppingListViewModel()
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(viewModel.notBoughtShoppingListItems, id: \.name) { item in
-                    ShoppingItemRowView(item: item)
-                        .listRowSeparator(.hidden)
-
+            List () {
+                ForEach(viewModel.shoppingListItemsToDisplay, id: \.name) { item in
+                    ShoppingItemRowView(item: item, isBoughtToggled: {
+                        viewModel.isBoughtToggled(for: item)
+                    })
+                    .listRowSeparator(.hidden)
+                    .onTapGesture {
+                        viewModel.willEdit(item: item)
+                        showEditItemSheet.toggle()
+                    }
                 }
+                .onDelete(perform: viewModel.deleteItem(at:))
+
             }
             .listRowSpacing(-15)
             .scrollContentBackground(.hidden)
@@ -27,8 +35,13 @@ struct HomePageView: View {
             .navigationTitle("Your Shopping List")
             .navigationBarTitleDisplayMode(.automatic)
         }
+        .sheet(isPresented: $showEditItemSheet) {
+            AddItemView(shoppingItem: $viewModel.itemToBeEdited, doneItem: {
+                self.viewModel.endEditing()
+            }).presentationDetents([.medium])
+        }
         .sheet(isPresented: $showAddItemSheet) {
-            AddItemView(shoppingItem: $viewModel.newItemToBeAdded, addItem: {
+            AddItemView(shoppingItem: $viewModel.newItemToBeAdded, doneItem: {
                 self.viewModel.addNewItem()
             }).presentationDetents([.medium])
         }
@@ -48,7 +61,6 @@ struct HomePageView: View {
             .shadow(radius: 10)
             .frame(height: 0)
         }
-        
     }
 }
 
