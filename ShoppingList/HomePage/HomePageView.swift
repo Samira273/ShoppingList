@@ -24,7 +24,7 @@ struct HomePageView: View {
                             } label: {
                                 Image("filter").foregroundColor(.blue)
                                 Text("Filter")
-                            }.padding(10)
+                            }.padding(20)
                             Spacer()
                             
                             Button {
@@ -32,7 +32,7 @@ struct HomePageView: View {
                             } label: {
                                 Image("sort").foregroundColor(.blue)
                                 Text("Sort")
-                            }.padding(10)
+                            }.padding(20)
                         }
                         HStack {
                             TextField("Search By Name Or Description", text: $viewModel.searchText)

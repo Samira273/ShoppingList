@@ -19,7 +19,7 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Private Variables
     @Published private var notBoughtShoppingListItems: [ShoppingItem] = []
     @Published private var boughtShoppingListItems: [ShoppingItem] = []
-    private var listStateSelected: AnyPublisher<ShoppingListState, Never> {
+    private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
         $shoppingListState.eraseToAnyPublisher()
     }
     private var cancellable = Set<AnyCancellable>()
@@ -95,7 +95,7 @@ class ShoppingListViewModel: ObservableObject {
     
     private func setupPublishers() {
 
-        listStateSelected
+        listStatePublisher
             .sink { [weak self] newValue in
                 guard let self else { return }
                 switch newValue {
@@ -107,7 +107,6 @@ class ShoppingListViewModel: ObservableObject {
             }
             .store(in: &cancellable)
     }
-
 }
 
 enum ShoppingListState {
