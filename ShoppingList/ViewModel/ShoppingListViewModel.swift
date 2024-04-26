@@ -15,6 +15,7 @@ class ShoppingListViewModel: ObservableObject {
     @Published var shoppingListItemsToDisplay: [ShoppingItem] = []
     @Published var shoppingListState: ShoppingListState = .notBought
     @Published var searchText: String = ""
+    @Published var sortInputs: (method: SortingMethod, criteria: SortingCriteria) = (.ascending, .name)
     var noItemsToDisplay: Bool {
         notBoughtShoppingListItems.isEmpty && boughtShoppingListItems.isEmpty
     }
@@ -99,6 +100,10 @@ class ShoppingListViewModel: ObservableObject {
             notBoughtShoppingListItems[index] = itemToBeEdited
         }
         updateState()
+    }
+    
+    func endSorting() {
+        print("endSorting")
     }
     
     private func searchItems(searchText: String) {

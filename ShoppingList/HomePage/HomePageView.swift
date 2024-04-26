@@ -12,6 +12,7 @@ struct HomePageView: View {
     @State private var showAddItemSheet: Bool = false
     @State private var showEditItemSheet: Bool = false
     @State private var showFilterItemsSheet: Bool = false
+    @State private var showSortItemsSheet: Bool = false
     @StateObject private var viewModel = ShoppingListViewModel()
     @FocusState private var searchIsFocused: Bool
 
@@ -31,7 +32,7 @@ struct HomePageView: View {
                             Spacer()
                             
                             Button {
-                                print("Sort button was tapped")
+                                showSortItemsSheet.toggle()
                             } label: {
                                 Image("sort").foregroundColor(.blue)
                                 Text("Sort")
@@ -109,6 +110,13 @@ struct HomePageView: View {
                 }.presentationDetents([.height(140)])
             }
 
+        }
+        
+        .sheet(isPresented: $showSortItemsSheet) {
+            SortView(sortInputs: $viewModel.sortInputs) {
+                showSortItemsSheet.toggle()
+                viewModel.endSorting()
+            }.presentationDetents([.medium])
         }
         
         .safeAreaInset(edge: VerticalEdge.bottom) {
