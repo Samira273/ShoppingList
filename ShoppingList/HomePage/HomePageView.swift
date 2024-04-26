@@ -13,6 +13,8 @@ struct HomePageView: View {
     @State private var showEditItemSheet: Bool = false
     @State private var showFilterItemsSheet: Bool = false
     @StateObject private var viewModel = ShoppingListViewModel()
+    @FocusState private var searchIsFocused: Bool
+
 
     var body: some View {
         NavigationView {
@@ -37,6 +39,7 @@ struct HomePageView: View {
                         }
                         HStack {
                             TextField("Search By Name Or Description", text: $viewModel.searchText)
+                                .focused($searchIsFocused)
                                 .padding(.horizontal, 40)
                                 .frame(width: UIScreen.main.bounds.width - 40, height: 45, alignment: .leading)
                                 .background(Color(#colorLiteral(red: 0.9294475317, green: 0.9239223003, blue: 0.9336946607, alpha: 1)))
