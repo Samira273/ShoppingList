@@ -11,6 +11,7 @@ struct HomePageView: View {
     
     @State private var showAddItemSheet: Bool = false
     @State private var showEditItemSheet: Bool = false
+    @State private var showFilterItemsSheet: Bool = false
     @StateObject private var viewModel = ShoppingListViewModel()
 
     var body: some View {
@@ -20,7 +21,7 @@ struct HomePageView: View {
                     VStack {
                         HStack {
                             Button {
-                                print("Filter button was tapped")
+                                showFilterItemsSheet.toggle()
                             } label: {
                                 Image("filter").foregroundColor(.blue)
                                 Text("Filter")
@@ -85,6 +86,28 @@ struct HomePageView: View {
                 self.viewModel.addNewItem()
             }).presentationDetents([.medium])
         }
+        .sheet(isPresented: $showFilterItemsSheet) {
+            VStack {
+                Text("Filter By").bold().font(.title)
+                HStack(alignment: .top, spacing: 10) {
+                    Spacer()
+                    RadioButtonView(title: "Bought", isSelected: viewModel.shoppingListState == .bought ? true : false)
+                        .onTapGesture {
+                            showFilterItemsSheet.toggle()
+                            viewModel.shoppingListState = .bought
+                        }
+                    Spacer()
+                    RadioButtonView(title: "Not Bought", isSelected: viewModel.shoppingListState == .notBought ? true : false)
+                        .onTapGesture {
+                            showFilterItemsSheet.toggle()
+                            viewModel.shoppingListState = .notBought
+                        }
+                    Spacer()
+                }.presentationDetents([.height(140)])
+            }
+
+        }
+        
         .safeAreaInset(edge: VerticalEdge.bottom) {
             HStack(spacing: -15) {
                 Spacer()
