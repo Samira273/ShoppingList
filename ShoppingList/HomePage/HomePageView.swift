@@ -17,7 +17,7 @@ struct HomePageView: View {
     var body: some View {
         NavigationView {
             VStack {
-                if !$viewModel.shoppingListItemsToDisplay.isEmpty {
+                if !viewModel.noItemsToDisplay {
                     VStack {
                         HStack {
                             Button {

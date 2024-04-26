@@ -15,6 +15,10 @@ class ShoppingListViewModel: ObservableObject {
     @Published var shoppingListItemsToDisplay: [ShoppingItem] = []
     @Published var shoppingListState: ShoppingListState = .notBought
     @Published var searchText: String = ""
+    var noItemsToDisplay: Bool {
+        notBoughtShoppingListItems.isEmpty && boughtShoppingListItems.isEmpty
+    }
+
     
     // MARK: - Private Variables
     @Published private var notBoughtShoppingListItems: [ShoppingItem] = []
@@ -22,6 +26,10 @@ class ShoppingListViewModel: ObservableObject {
     private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
         $shoppingListState.eraseToAnyPublisher()
     }
+    private var searchTextPublisher: AnyPublisher<String, Never> {
+        $searchText.eraseToAnyPublisher()
+    }
+
     private var cancellable = Set<AnyCancellable>()
 
 
@@ -93,6 +101,22 @@ class ShoppingListViewModel: ObservableObject {
         updateState()
     }
     
+    private func searchItems(searchText: String) {
+        let list: [ShoppingItem]
+        switch shoppingListState {
+        case .bought:
+            list = boughtShoppingListItems
+        case .notBought:
+            list = notBoughtShoppingListItems
+        }
+        if searchText.isEmpty {
+            shoppingListItemsToDisplay = list
+            return
+        }
+        let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
+        shoppingListItemsToDisplay = searchResultList
+    }
+    
     private func setupPublishers() {
 
         listStatePublisher
@@ -106,6 +130,17 @@ class ShoppingListViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellable)
+        
+        searchTextPublisher
+        //    .debounce(for: .milliseconds(800), scheduler: RunLoop.main) this if we will search remotly on server
+            .removeDuplicates()
+            .map({ (string) -> String? in
+                return string
+            }) // prevents sending numerous requests and sends nil if the count of the characters is less than 1.
+            .compactMap{ $0 } // removes the nil values so the search string does not get passed down to the publisher chain
+            .sink { (_) in } receiveValue: { [self] (searchField) in
+                searchItems(searchText: searchField)
+            }.store(in: &cancellable)
     }
 }
 

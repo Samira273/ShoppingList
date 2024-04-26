@@ -137,8 +137,8 @@
 		E5E1E5752BD97A22009AD869 /* ShoppingList */ = {
 			isa = PBXGroup;
 			children = (
-				E57CF1BA2BDBCFD900573C45 /* UIElements */,
 				E5E1E5762BD97A22009AD869 /* ShoppingListApp.swift */,
+				E57CF1BA2BDBCFD900573C45 /* UIElements */,
 				E56B536E2BDA4D8800BB9068 /* AddItemPage */,
 				E5E1E5A12BD98064009AD869 /* HomePage */,
 				E56B53722BDA8D7500BB9068 /* ViewModel */,
