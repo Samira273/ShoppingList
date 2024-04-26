@@ -71,7 +71,7 @@ class ShoppingListViewModel: ObservableObject {
         var item = item
         switch item.isOn {
         case true: //it is in bought list
-            guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == itemToBeEdited.id}) else { return }
+            guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
             item.isOn.toggle()
             notBoughtShoppingListItems.append(item)
             boughtShoppingListItems.remove(at: index)
