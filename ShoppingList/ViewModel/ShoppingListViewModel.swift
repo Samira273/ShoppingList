@@ -14,6 +14,7 @@ class ShoppingListViewModel: ObservableObject {
     @Published var itemToBeEdited: ShoppingItem = ShoppingItem(name: "", quantity: "", description: "", isOn: false)
     @Published var shoppingListItemsToDisplay: [ShoppingItem] = []
     @Published var shoppingListState: ShoppingListState = .notBought
+    @Published var searchText: String = ""
     
     // MARK: - Private Variables
     @Published private var notBoughtShoppingListItems: [ShoppingItem] = []

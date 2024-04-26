@@ -15,26 +15,66 @@ struct HomePageView: View {
 
     var body: some View {
         NavigationView {
-            List () {
-                ForEach(viewModel.shoppingListItemsToDisplay, id: \.name) { item in
-                    ShoppingItemRowView(item: item, isBoughtToggled: {
-                        viewModel.isBoughtToggled(for: item)
-                    })
-                    .listRowSeparator(.hidden)
-                    .onTapGesture {
-                        viewModel.willEdit(item: item)
-                        showEditItemSheet.toggle()
+            VStack {
+                if !$viewModel.shoppingListItemsToDisplay.isEmpty {
+                    VStack {
+                        HStack {
+                            Button {
+                                print("Filter button was tapped")
+                            } label: {
+                                Image("filter").foregroundColor(.blue)
+                                Text("Filter")
+                            }.padding(10)
+                            Spacer()
+                            
+                            Button {
+                                print("Sort button was tapped")
+                            } label: {
+                                Image("sort").foregroundColor(.blue)
+                                Text("Sort")
+                            }.padding(10)
+                        }
+                        HStack {
+                            TextField("Search By Name Or Description", text: $viewModel.searchText)
+                                .padding(.horizontal, 40)
+                                .frame(width: UIScreen.main.bounds.width - 40, height: 45, alignment: .leading)
+                                .background(Color(#colorLiteral(red: 0.9294475317, green: 0.9239223003, blue: 0.9336946607, alpha: 1)))
+                                .clipped()
+                                .cornerRadius(10)
+                                .overlay(
+                                    HStack {
+                                        Image(systemName: "magnifyingglass")
+                                            .foregroundColor(.gray)
+                                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                            .padding(.leading, 16)
+                                    }
+                                )
+                            
+                        }
                     }
                 }
-                .onDelete(perform: viewModel.deleteItem(at:))
+                List () {
+                    ForEach(viewModel.shoppingListItemsToDisplay, id: \.name) { item in
+                        ShoppingItemRowView(item: item, isBoughtToggled: {
+                            viewModel.isBoughtToggled(for: item)
+                        })
+                        .listRowSeparator(.hidden)
+                        .onTapGesture {
+                            viewModel.willEdit(item: item)
+                            showEditItemSheet.toggle()
+                        }
+                    }
+                    .onDelete(perform: viewModel.deleteItem(at:))
 
+                }
+                .listRowSpacing(-15)
+                .scrollContentBackground(.hidden)
+                .padding([.leading, .trailing], -30)
             }
-            .listRowSpacing(-15)
-            .scrollContentBackground(.hidden)
-            .padding([.leading, .trailing], -30)
             .navigationTitle("Your Shopping List")
             .navigationBarTitleDisplayMode(.automatic)
         }
+        
         .sheet(isPresented: $showEditItemSheet) {
             AddItemView(shoppingItem: $viewModel.itemToBeEdited, doneItem: {
                 self.viewModel.endEditing()
