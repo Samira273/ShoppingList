@@ -105,12 +105,14 @@ struct HomePageView: View {
                     Spacer()
                     RadioButtonView(title: "Bought", isSelected: viewModel.shoppingListState == .bought ? true : false)
                         .onTapGesture {
+                            clearAndResignSearchTextField()
                             showFilterItemsSheet.toggle()
                             viewModel.shoppingListState = .bought
                         }
                     Spacer()
                     RadioButtonView(title: "Not Bought", isSelected: viewModel.shoppingListState == .notBought ? true : false)
                         .onTapGesture {
+                            clearAndResignSearchTextField()
                             showFilterItemsSheet.toggle()
                             viewModel.shoppingListState = .notBought
                         }
@@ -141,6 +143,11 @@ struct HomePageView: View {
             .shadow(radius: 10)
             .frame(height: 0)
         }
+    }
+    
+    private func clearAndResignSearchTextField() {
+        viewModel.searchText = ""
+        searchIsFocused = false
     }
 }
 
