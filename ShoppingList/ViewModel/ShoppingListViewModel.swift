@@ -35,6 +35,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     // MARK: - Private Variables
+    private var isSorting = false
     private var notBoughtShoppingListItems: [ShoppingItem] = []
     private var boughtShoppingListItems: [ShoppingItem] = []
     private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
@@ -94,6 +95,12 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     func deleteItem(at offsets: IndexSet) {
+        
+        if isSorting || isSearching, let index = offsets.first {
+            deleteItemWhenSortingOrSearching(at: index)
+            return
+        }
+        
         switch shoppingListState {
         case .bought:
             boughtShoppingListItems.remove(atOffsets: offsets)
@@ -104,6 +111,19 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     // MARK: - Private Functions
+    
+    private func deleteItemWhenSortingOrSearching(at index: Int) {
+        let item = shoppingListItemsToDisplay.remove(at: index)
+        shoppingListItemsToDisplay = shoppingListItemsToDisplay
+        switch shoppingListState {
+        case .bought:
+            guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else {return}
+            boughtShoppingListItems.remove(at: index)
+        case .notBought:
+            guard let index = notBoughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
+            notBoughtShoppingListItems.remove(at: index)
+        }
+    }
     
     private func validateNameAndQuantity(of item: ShoppingItem) -> Bool {
         if item.isEmpty {
@@ -166,6 +186,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     private func endSorting() {
+        isSorting = true
         switch sortInputs.method {
         case .ascending:
             sortAscendingly()
@@ -258,6 +279,7 @@ class ShoppingListViewModel: ObservableObject {
                 guard let self else { return }
                 setDisplayListAccordingly(shoppingListState)
                 sortInputs = (.ascending, .name)
+                isSorting = false
             }
             .store(in: &cancellable)
         
