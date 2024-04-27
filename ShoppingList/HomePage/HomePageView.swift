@@ -134,6 +134,7 @@ struct HomePageView: View {
                 }, label : {
                     Text("Add New Item").padding(.all, 20).foregroundColor(.blue).bold()
                 })
+                .accessibilityIdentifier("add_button")
                 Spacer()
             }
             .background(Gradient(colors: [.white]))
