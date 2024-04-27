@@ -64,6 +64,12 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Init
     init() {
         setupPublishers()
+        fetchData()
+    }
+    
+    // MARK: - Fetch data
+    func fetchData() {
+        // if we have remote fetch from server of fetch data with core data.
     }
     
     //MARK: - Public Functions
@@ -79,29 +85,23 @@ class ShoppingListViewModel: ObservableObject {
         }
         showAddItemSheet.toggle()
         notBoughtShoppingListItems.append(newItemToBeAdded)
-//        switch shoppingListState {
-//        case .bought:
-//            boughtShoppingListItems.append(newItemToBeAdded)
-//        case .notBought:
-//            notBoughtShoppingListItems.append(newItemToBeAdded)
-//        }
         updateState()
         self.newItemToBeAdded = createEmptyShoppingItem()
     }
     
     
-    func willEdit(item: ShoppingItem) {
+    func willEdit(item: ShoppingItem) { // here is to display the item in the AddNewItemView
         itemToBeEdited = item
     }
     
     func deleteItem(at offsets: IndexSet) {
         
-        if isSorting || isSearching, let index = offsets.first {
+        if isSorting || isSearching, let index = offsets.first { // deleting item while searching or sorting is different from normal delete while filtering with bought w not bought
             deleteItemWhenSortingOrSearching(at: index)
             return
         }
         
-        switch shoppingListState {
+        switch shoppingListState { //normal delete
         case .bought:
             boughtShoppingListItems.remove(atOffsets: offsets)
         case .notBought:
@@ -113,12 +113,12 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Private Functions
     
     private func deleteItemWhenSortingOrSearching(at index: Int) {
-        let item = shoppingListItemsToDisplay.remove(at: index)
+        let item = shoppingListItemsToDisplay.remove(at: index) // we first delete from the display list
         DispatchQueue.main.async {[weak self] in
             guard let self else { return }
             shoppingListItemsToDisplay = shoppingListItemsToDisplay
         }
-        switch shoppingListState {
+        switch shoppingListState { // search for the item in the current state, delete it from the according list
         case .bought:
             guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else {return}
             boughtShoppingListItems.remove(at: index)
