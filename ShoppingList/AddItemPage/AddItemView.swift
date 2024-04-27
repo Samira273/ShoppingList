@@ -42,11 +42,6 @@ struct AddItemView: View {
                             .multilineTextAlignment(.leading).padding(10).keyboardType(getKeyboardType(index: index))
                     }
                 }
-                //            HStack {
-                //                Text("Is Bought").fontWeight(.semibold)
-                //                Toggle("", isOn: $shoppingItem.isOn)
-                //                      .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                //            }
             }
         }
     }

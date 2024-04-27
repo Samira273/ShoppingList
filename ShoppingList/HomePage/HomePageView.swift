@@ -59,7 +59,7 @@ struct HomePageView: View {
                     }
                 }
                 List () {
-                    ForEach(viewModel.shoppingListItemsToDisplay, id: \.name) { item in
+                    ForEach(viewModel.shoppingListItemsToDisplay, id: \.id) { item in
                         ShoppingItemRowView(item: item, isBoughtToggled: {
                             viewModel.isBoughtToggled(for: item)
                         })
@@ -70,7 +70,6 @@ struct HomePageView: View {
                         }
                     }
                     .onDelete(perform: viewModel.deleteItem(at:))
-
                 }
                 .listRowSpacing(-15)
                 .scrollContentBackground(.hidden)

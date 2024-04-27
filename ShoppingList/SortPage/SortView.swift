@@ -13,6 +13,10 @@ struct SortView: View {
     @Binding var doneSortingTapped: Bool
     @Binding var clearTapped: Bool
     @State private var refreshView = false
+    let ascendingWhiteImageName = "sort_ascending_white"
+    let ascendingBlackImageName = "sort_ascending_black"
+    let descendingWhiteImageName = "sort_descending_white"
+    let descendingBlackImageName = "sort_descending_black"
 
     
     var body: some View {
@@ -42,7 +46,7 @@ struct SortView: View {
                     sortInputs.method = .ascending
                 }) {
                     HStack {
-                        Image(sortInputs.method == .ascending ? "sort_ascending_white" : "sort_ascending_black")
+                        Image(sortInputs.method == .ascending ? ascendingWhiteImageName : ascendingBlackImageName)
                         Text("Ascending").fontWeight(.semibold)
                     }
                 }
@@ -55,7 +59,7 @@ struct SortView: View {
                     sortInputs.method = .descending
                 }) {
                     HStack {
-                        Image(sortInputs.method == .descending ? "sort_descending_white" : "sort_descending_black")
+                        Image(sortInputs.method == .descending ? descendingWhiteImageName : descendingBlackImageName)
                         Text("Descending").fontWeight(.semibold)
                     }
                 }
