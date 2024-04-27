@@ -81,14 +81,10 @@ struct HomePageView: View {
         }
         
         .sheet(isPresented: $showEditItemSheet) {
-            AddItemView(shoppingItem: $viewModel.itemToBeEdited, doneItem: {
-                self.viewModel.endEditing()
-            }).presentationDetents([.medium])
+            AddItemView(shoppingItem: $viewModel.itemToBeEdited, doneItem: $viewModel.doneEditing).presentationDetents([.medium])
         }
         .sheet(isPresented: $showAddItemSheet) {
-            AddItemView(shoppingItem: $viewModel.newItemToBeAdded, doneItem: {
-                self.viewModel.addNewItem()
-            }).presentationDetents([.medium])
+            AddItemView(shoppingItem: $viewModel.newItemToBeAdded, doneItem: $viewModel.doneNewItem).presentationDetents([.medium])
         }
         .sheet(isPresented: $showFilterItemsSheet) {
             VStack {
@@ -113,10 +109,8 @@ struct HomePageView: View {
         }
         
         .sheet(isPresented: $showSortItemsSheet) {
-            SortView(sortInputs: $viewModel.sortInputs) {
-                showSortItemsSheet.toggle()
-                viewModel.endSorting()
-            }.presentationDetents([.medium])
+            SortView(sortInputs: $viewModel.sortInputs, doneSortingTapped: $viewModel.doneSortTapped, clearTapped: $viewModel.clearSortTapped)
+                .presentationDetents([.medium])
         }
         
         .safeAreaInset(edge: VerticalEdge.bottom) {

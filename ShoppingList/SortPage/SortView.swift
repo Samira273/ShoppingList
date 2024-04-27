@@ -10,7 +10,9 @@ import SwiftUI
 struct SortView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var sortInputs: (method: SortingMethod, criteria: SortingCriteria)
-    var doneTapped: () -> Void
+    @Binding var doneSortingTapped: Bool
+    @Binding var clearTapped: Bool
+    @State private var refreshView = false
 
     
     var body: some View {
@@ -27,10 +29,11 @@ struct SortView: View {
                 Text("Sort By").bold()
                 Spacer()
                 Button(action: {
-                    doneTapped()
+                    clearTapped.toggle()
+                    dismiss()
                 }) {
                     HStack {
-                        Text("Done").fontWeight(.semibold)
+                        Text("Clear").fontWeight(.semibold)
                     }
                 }.padding(20)
             }
@@ -69,19 +72,31 @@ struct SortView: View {
                     SortItemView(itemChecked: .constant(sortInputs.criteria == criteria), text: criteria.title)
                         .onTapGesture {
                             sortInputs.criteria = criteria
-                        }
+                            refreshView.toggle()
+                        }.id(refreshView)
                 }
-            }.padding()
+            }.padding(20)
+            Button(action: {
+                doneSortingTapped.toggle()
+                dismiss()
+            }, label: {
+                Text("Done").bold()
+                    .frame(width: 90, height: 50, alignment: .center)
+            }).foregroundColor(.white)
+            .background(Color.blue            .clipShape(RoundedRectangle(cornerRadius: 25)))
+            .padding(30)
         }
-        .padding([.top], -125)
+        .padding([.top], -45)
     }
 }
 
 #Preview {
     struct Preview: View {
         @State var sortingInput: (method: SortingMethod, criteria: SortingCriteria) = (.ascending, .name)
+        @State var clearTapped = false
+        @State var doneTapped = false
         var body: some View {
-            SortView(sortInputs: $sortingInput, doneTapped: {})
+            SortView(sortInputs: $sortingInput, doneSortingTapped: $doneTapped, clearTapped: $clearTapped)
         }
     }
     return Preview()

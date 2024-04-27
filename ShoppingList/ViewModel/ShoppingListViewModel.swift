@@ -16,6 +16,10 @@ class ShoppingListViewModel: ObservableObject {
     @Published var shoppingListState: ShoppingListState = .notBought
     @Published var searchText: String = ""
     @Published var sortInputs: (method: SortingMethod, criteria: SortingCriteria) = (.ascending, .name)
+    @Published var clearSortTapped = false
+    @Published var doneSortTapped = false
+    @Published var doneNewItem = false
+    @Published var doneEditing = false
     var noItemsToDisplay: Bool {
         notBoughtShoppingListItems.isEmpty && boughtShoppingListItems.isEmpty
     }
@@ -29,6 +33,18 @@ class ShoppingListViewModel: ObservableObject {
     }
     private var searchTextPublisher: AnyPublisher<String, Never> {
         $searchText.eraseToAnyPublisher()
+    }
+    private var clearSortPublisher: AnyPublisher<Bool, Never> {
+        $clearSortTapped.eraseToAnyPublisher()
+    }
+    private var doneSortPublisher: AnyPublisher<Bool, Never> {
+        $doneSortTapped.eraseToAnyPublisher()
+    }
+    private var doneNewItemPublisher: AnyPublisher<Bool, Never> {
+        $doneNewItem.eraseToAnyPublisher()
+    }
+    private var doneEditingPublisher: AnyPublisher<Bool, Never> {
+        $doneEditing.eraseToAnyPublisher()
     }
 
     private var cancellable = Set<AnyCancellable>()
@@ -102,11 +118,16 @@ class ShoppingListViewModel: ObservableObject {
         updateState()
     }
     
-    func endSorting() {
-        print("endSorting")
+    private func endSorting() {
+        switch sortInputs.method {
+        case .ascending:
+            sortAscendingly()
+        case .descending:
+            sortDescendingly()
+        }
     }
     
-    private func searchItems(searchText: String) {
+    private func searchAndSortList() -> [ShoppingItem] {
         let list: [ShoppingItem]
         switch shoppingListState {
         case .bought:
@@ -114,6 +135,37 @@ class ShoppingListViewModel: ObservableObject {
         case .notBought:
             list = notBoughtShoppingListItems
         }
+        return list
+    }
+    
+    private func sortAscendingly() {
+        var sortResultList = shoppingListItemsToDisplay
+        switch sortInputs.criteria {
+        case .name:
+            sortResultList.sort(by: {$0.name < $1.name})
+        case .quantity:
+            sortResultList.sort(by: {Int($0.quantity) ?? 0 < Int($1.quantity) ?? 0})
+        case .description:
+            sortResultList.sort(by: {$0.description < $1.description})
+        }
+        shoppingListItemsToDisplay = sortResultList
+    }
+    
+    private func sortDescendingly() {
+        var sortResultList = shoppingListItemsToDisplay
+        switch sortInputs.criteria {
+        case .name:
+            sortResultList.sort(by: {$0.name > $1.name})
+        case .quantity:
+            sortResultList.sort(by: {Int($0.quantity) ?? 0 > Int($1.quantity) ?? 0})
+        case .description:
+            sortResultList.sort(by: {$0.description > $1.description})
+        }
+        shoppingListItemsToDisplay = sortResultList
+    }
+    
+    private func searchItems(searchText: String) {
+        let list = searchAndSortList()
         if searchText.isEmpty {
             shoppingListItemsToDisplay = list
             return
@@ -122,17 +174,49 @@ class ShoppingListViewModel: ObservableObject {
         shoppingListItemsToDisplay = searchResultList
     }
     
+    private func setDisplayListAccordingly(_ state: ShoppingListState? = nil) {
+        switch state ?? shoppingListState {
+        case .bought:
+            shoppingListItemsToDisplay = boughtShoppingListItems
+        case .notBought:
+            shoppingListItemsToDisplay = notBoughtShoppingListItems
+        }
+    }
+    
     private func setupPublishers() {
 
         listStatePublisher
             .sink { [weak self] newValue in
                 guard let self else { return }
-                switch newValue {
-                case .bought:
-                    shoppingListItemsToDisplay = boughtShoppingListItems
-                case .notBought:
-                    shoppingListItemsToDisplay = notBoughtShoppingListItems
-                }
+               setDisplayListAccordingly(newValue)
+            }
+            .store(in: &cancellable)
+        
+        clearSortPublisher
+            .sink { [weak self] newValue in
+                guard let self else { return }
+                setDisplayListAccordingly(shoppingListState)
+                sortInputs = (.ascending, .name)
+            }
+            .store(in: &cancellable)
+        
+        doneSortPublisher
+            .sink { [weak self] newValue in
+                guard let self else { return }
+              endSorting()
+            }
+            .store(in: &cancellable)
+        
+        doneEditingPublisher
+            .sink { [weak self] newValue in
+                guard let self else { return }
+              endEditing()
+            }
+            .store(in: &cancellable)
+        doneNewItemPublisher
+            .sink { [weak self] newValue in
+                guard let self else { return }
+              addNewItem()
             }
             .store(in: &cancellable)
         
