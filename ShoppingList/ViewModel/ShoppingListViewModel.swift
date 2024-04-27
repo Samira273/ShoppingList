@@ -16,17 +16,21 @@ class ShoppingListViewModel: ObservableObject {
     @Published var shoppingListState: ShoppingListState = .notBought
     @Published var searchText: String = ""
     @Published var sortInputs: (method: SortingMethod, criteria: SortingCriteria) = (.ascending, .name)
+    @Published var toggledItem = ShoppingItem(name: "", quantity: "", description: "", isOn: false)
+    var errorMessage = "kokoooooo smsm"
+    // MARK: - Checks
     @Published var clearSortTapped = false
     @Published var doneSortTapped = false
     @Published var doneNewItem = false
     @Published var doneEditing = false
     @Published var isSearching = false
-    @Published var toggledItem = ShoppingItem(name: "", quantity: "", description: "", isOn: false)
+    @Published var showValidationErrorAlert: Bool = false
+    @Published var showAddItemSheet: Bool = false
     
+    // MARK: - Computed Properties
     var noItemsToDisplay: Bool {
         notBoughtShoppingListItems.isEmpty && boughtShoppingListItems.isEmpty
     }
-    
     
     // MARK: - Private Variables
     private var notBoughtShoppingListItems: [ShoppingItem] = []
@@ -52,12 +56,15 @@ class ShoppingListViewModel: ObservableObject {
     private var toggledItemPublisher: AnyPublisher<ShoppingItem, Never> {
         $toggledItem.eraseToAnyPublisher()
     }
-    
     private var cancellable = Set<AnyCancellable>()
     
-    
+    //MARK: - Public Funtions
     func addNewItem() {
-        guard !newItemToBeAdded.isEmpty else { return }
+        guard validateNameAndQuantity(of: newItemToBeAdded) else {
+            showValidationErrorAlert.toggle()
+            return
+        }
+        showAddItemSheet.toggle()
         switch shoppingListState {
         case .bought:
             boughtShoppingListItems.append(newItemToBeAdded)
@@ -90,6 +97,24 @@ class ShoppingListViewModel: ObservableObject {
         updateState()
     }
     
+    // MARK: - Private Functions
+    
+    private func validateNameAndQuantity(of item: ShoppingItem) -> Bool {
+        if item.isEmpty {
+            errorMessage = "Please enter name and quantity."
+            return false
+        }
+        if !(item.quantity.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil) {
+            errorMessage = "Please enter valid quantity."
+            return false
+        }
+        if !item.name.isEmpty {
+            errorMessage = "Please enter a name."
+            return false
+        } 
+        return true
+    }
+    
     private func isBoughtToggled(for item: ShoppingItem) {
         var item = item
         switch item.isOn {
@@ -116,7 +141,11 @@ class ShoppingListViewModel: ObservableObject {
         shoppingListState = state ?? shoppingListState
     }
     
-    func endEditing() {
+    private func endEditing() {
+        guard validateNameAndQuantity(of: itemToBeEdited) else {
+            showValidationErrorAlert.toggle()
+            return
+        }
         switch itemToBeEdited.isOn {
         case true:
             guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == itemToBeEdited.id}) else { return }
@@ -194,6 +223,7 @@ class ShoppingListViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Setup Publishers
     private func setupPublishers() {
         
         toggledItemPublisher
@@ -225,6 +255,7 @@ class ShoppingListViewModel: ObservableObject {
             .store(in: &cancellable)
         
         doneEditingPublisher
+            .dropFirst()
             .sink { [weak self] newValue in
                 guard let self else { return }
                 endEditing()
@@ -232,6 +263,7 @@ class ShoppingListViewModel: ObservableObject {
             .store(in: &cancellable)
         
         doneNewItemPublisher
+            .dropFirst()
             .sink { [weak self] newValue in
                 guard let self else { return }
                 addNewItem()

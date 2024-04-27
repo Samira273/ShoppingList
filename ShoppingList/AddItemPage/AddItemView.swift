@@ -27,7 +27,7 @@ struct AddItemView: View {
                 Spacer()
                 Button(action: {
                     self.doneItem.toggle()
-                    self.dismiss()
+                   // self.dismiss()
                 }, label: {
                     Text("Done").fontWeight(.semibold).padding(10)
                 }).padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))

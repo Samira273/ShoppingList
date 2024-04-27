@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomePageView: View {
     
-    @State private var showAddItemSheet: Bool = false
     @State private var showEditItemSheet: Bool = false
     @State private var showFilterItemsSheet: Bool = false
     @State private var showSortItemsSheet: Bool = false
@@ -89,10 +88,17 @@ struct HomePageView: View {
         
         .sheet(isPresented: $showEditItemSheet) {
             AddItemView(shoppingItem: $viewModel.itemToBeEdited, doneItem: $viewModel.doneEditing).presentationDetents([.medium])
+                .alert(viewModel.errorMessage, isPresented: $viewModel.showValidationErrorAlert) {
+                    Button("OK", role: .cancel) { }
+                }
         }
-        .sheet(isPresented: $showAddItemSheet) {
+        .sheet(isPresented: $viewModel.showAddItemSheet) {
             AddItemView(shoppingItem: $viewModel.newItemToBeAdded, doneItem: $viewModel.doneNewItem).presentationDetents([.medium])
+                .alert(viewModel.errorMessage, isPresented: $viewModel.showValidationErrorAlert) {
+                    Button("OK", role: .cancel) { }
+                }
         }
+        
         .sheet(isPresented: $showFilterItemsSheet) {
             VStack {
                 Text("Filter By").bold().font(.title)
@@ -125,7 +131,7 @@ struct HomePageView: View {
                 Spacer()
                 Image(systemName: "plus").foregroundColor(.blue)
                 Button(action: {
-                    showAddItemSheet.toggle()
+                    viewModel.showAddItemSheet.toggle()
                 }, label : {
                     Text("Add New Item").padding(.all, 20).foregroundColor(.blue).bold()
                 })
