@@ -17,7 +17,8 @@ class ShoppingListViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var sortInputs: (method: SortingMethod, criteria: SortingCriteria) = (.ascending, .name)
     @Published var toggledItem = ShoppingItem(name: "", quantity: "", description: "", isOn: false)
-    var errorMessage = "kokoooooo smsm"
+    var errorMessage = ""
+    
     // MARK: - Checks
     @Published var clearSortTapped = false
     @Published var doneSortTapped = false
@@ -58,7 +59,17 @@ class ShoppingListViewModel: ObservableObject {
     }
     private var cancellable = Set<AnyCancellable>()
     
-    //MARK: - Public Funtions
+    // MARK: - Init
+    init() {
+        setupPublishers()
+    }
+    
+    //MARK: - Public Functions
+    
+    func createEmptyShoppingItem() -> ShoppingItem {
+        ShoppingItem(name: "", quantity: "", description: "", isOn: false)
+    }
+    
     func addNewItem() {
         guard validateNameAndQuantity(of: newItemToBeAdded) else {
             showValidationErrorAlert.toggle()
@@ -72,16 +83,9 @@ class ShoppingListViewModel: ObservableObject {
             notBoughtShoppingListItems.append(newItemToBeAdded)
         }
         updateState()
-        self.newItemToBeAdded = emptyShoppingItem()
+        self.newItemToBeAdded = createEmptyShoppingItem()
     }
     
-    init() {
-        setupPublishers()
-    }
-    
-    func emptyShoppingItem() -> ShoppingItem {
-        ShoppingItem(name: "", quantity: "", description: "", isOn: false)
-    }
     
     func willEdit(item: ShoppingItem) {
         itemToBeEdited = item
@@ -115,32 +119,6 @@ class ShoppingListViewModel: ObservableObject {
         return true
     }
     
-    private func isBoughtToggled(for item: ShoppingItem) {
-        var item = item
-        switch item.isOn {
-        case true: //it is in bought list
-            guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
-            item.isOn.toggle()
-            notBoughtShoppingListItems.append(item)
-            boughtShoppingListItems.remove(at: index)
-            
-        case false: // it is in not Bought list
-            guard let index = notBoughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
-            item.isOn.toggle()
-            boughtShoppingListItems.append(item)
-            notBoughtShoppingListItems.remove(at: index)
-        }
-        if isSearching {
-            searchItems(searchText: searchText)
-        } else {
-            updateState()
-        }
-    }
-    
-    private func updateState(_ state: ShoppingListState? = nil) {
-        shoppingListState = state ?? shoppingListState
-    }
-    
     private func endEditing() {
         guard validateNameAndQuantity(of: itemToBeEdited) else {
             showValidationErrorAlert.toggle()
@@ -155,18 +133,21 @@ class ShoppingListViewModel: ObservableObject {
             notBoughtShoppingListItems[index] = itemToBeEdited
         }
         updateState()
+        self.itemToBeEdited = createEmptyShoppingItem()
     }
     
-    private func endSorting() {
-        switch sortInputs.method {
-        case .ascending:
-            sortAscendingly()
-        case .descending:
-            sortDescendingly()
+    private func searchItems(searchText: String) {
+        let list = toSearchList()
+        if searchText.isEmpty {
+            shoppingListItemsToDisplay = list
+            return
         }
+        isSearching = true
+        let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
+        shoppingListItemsToDisplay = searchResultList
     }
     
-    private func searchAndSortList() -> [ShoppingItem] {
+    private func toSearchList() -> [ShoppingItem] {
         let list: [ShoppingItem]
         switch shoppingListState {
         case .bought:
@@ -177,6 +158,15 @@ class ShoppingListViewModel: ObservableObject {
         return list
     }
     
+    private func endSorting() {
+        switch sortInputs.method {
+        case .ascending:
+            sortAscendingly()
+        case .descending:
+            sortDescendingly()
+        }
+    }
+
     private func sortAscendingly() {
         var sortResultList = shoppingListItemsToDisplay
         switch sortInputs.criteria {
@@ -203,15 +193,32 @@ class ShoppingListViewModel: ObservableObject {
         shoppingListItemsToDisplay = sortResultList
     }
     
-    private func searchItems(searchText: String) {
-        let list = searchAndSortList()
-        if searchText.isEmpty {
-            shoppingListItemsToDisplay = list
-            return
+    private func isBoughtToggled(for item: ShoppingItem) {
+        var item = item
+        switch item.isOn {
+        case true: //it is in bought list
+            guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
+            item.isOn.toggle()
+            notBoughtShoppingListItems.append(item)
+            boughtShoppingListItems.remove(at: index)
+            
+        case false: // it is in not Bought list
+            guard let index = notBoughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
+            item.isOn.toggle()
+            boughtShoppingListItems.append(item)
+            notBoughtShoppingListItems.remove(at: index)
         }
-        isSearching = true
-        let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
-        shoppingListItemsToDisplay = searchResultList
+        if isSearching {
+            searchItems(searchText: searchText)
+        } else {
+            updateState()
+        }
+    }
+    
+    //MARK: - Helping functions, remove redundant code with calling them
+    
+    private func updateState(_ state: ShoppingListState? = nil) {
+        shoppingListState = state ?? shoppingListState
     }
     
     private func setDisplayListAccordingly(_ state: ShoppingListState? = nil) {
