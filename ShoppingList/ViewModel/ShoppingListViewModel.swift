@@ -138,7 +138,7 @@ class ShoppingListViewModel: ObservableObject {
             errorMessage = "Please enter a quantity."
             return false
         }
-        if !(item.quantity.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil) && Int(item.quantity) ?? 0 > 0 {
+        if !(item.quantity.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil) || Int(item.quantity) ?? 0 < 1 {
             errorMessage = "Please enter valid quantity."
             return false
         }
