@@ -20,6 +20,7 @@ class ShoppingListViewModel: ObservableObject {
     @Published var doneSortTapped = false
     @Published var doneNewItem = false
     @Published var doneEditing = false
+    @Published var isSearching = false
     @Published var toggledItem = ShoppingItem(name: "", quantity: "", description: "", isOn: false)
     
     var noItemsToDisplay: Bool {
@@ -28,8 +29,8 @@ class ShoppingListViewModel: ObservableObject {
     
     
     // MARK: - Private Variables
-    @Published private var notBoughtShoppingListItems: [ShoppingItem] = []
-    @Published private var boughtShoppingListItems: [ShoppingItem] = []
+    private var notBoughtShoppingListItems: [ShoppingItem] = []
+    private var boughtShoppingListItems: [ShoppingItem] = []
     private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
         $shoppingListState.eraseToAnyPublisher()
     }
@@ -104,7 +105,11 @@ class ShoppingListViewModel: ObservableObject {
             boughtShoppingListItems.append(item)
             notBoughtShoppingListItems.remove(at: index)
         }
-        updateState()
+        if isSearching {
+            searchItems(searchText: searchText)
+        } else {
+            updateState()
+        }
     }
     
     private func updateState(_ state: ShoppingListState? = nil) {
@@ -175,6 +180,7 @@ class ShoppingListViewModel: ObservableObject {
             shoppingListItemsToDisplay = list
             return
         }
+        isSearching = true
         let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
         shoppingListItemsToDisplay = searchResultList
     }
@@ -233,7 +239,7 @@ class ShoppingListViewModel: ObservableObject {
             .store(in: &cancellable)
         
         searchTextPublisher
-        //    .debounce(for: .milliseconds(800), scheduler: RunLoop.main) this if we will search remotly on server
+        //    .debounce(for: .milliseconds(800), scheduler: RunLoop.main) this if we will search remotely on server
             .removeDuplicates()
             .map({ (string) -> String? in
                 return string

@@ -39,6 +39,17 @@ struct HomePageView: View {
                         }
                         HStack {
                             TextField("Search By Name Or Description", text: $viewModel.searchText)
+                                .onChange(of: viewModel.searchText) {
+                                    if !viewModel.searchText.isEmpty && !viewModel.isSearching {
+                                        viewModel.isSearching.toggle()
+                                    }
+                                }
+                                .onSubmit {
+                                    if viewModel.isSearching {
+                                        viewModel.isSearching.toggle()
+                                    }
+                                }
+                                .disableAutocorrection(true)
                                 .focused($searchIsFocused)
                                 .padding(.horizontal, 40)
                                 .frame(width: UIScreen.main.bounds.width - 40, height: 45, alignment: .leading)
