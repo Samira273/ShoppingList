@@ -14,6 +14,7 @@
 		E56B53702BDA4D9B00BB9068 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B536F2BDA4D9B00BB9068 /* AddItemView.swift */; };
 		E56B53742BDA8D8900BB9068 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B53732BDA8D8900BB9068 /* ShoppingListViewModel.swift */; };
 		E57CF1BC2BDBCFE900573C45 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57CF1BB2BDBCFE900573C45 /* RadioButtonView.swift */; };
+		E5B197922BDD3FFE000C8F51 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B53732BDA8D8900BB9068 /* ShoppingListViewModel.swift */; };
 		E5E1E5772BD97A22009AD869 /* ShoppingListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1E5762BD97A22009AD869 /* ShoppingListApp.swift */; };
 		E5E1E5792BD97A22009AD869 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1E5782BD97A22009AD869 /* HomePageView.swift */; };
 		E5E1E57B2BD97A23009AD869 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57A2BD97A23009AD869 /* Assets.xcassets */; };
@@ -344,6 +345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B197922BDD3FFE000C8F51 /* ShoppingListViewModel.swift in Sources */,
 				E5E1E5892BD97A23009AD869 /* ShoppingListTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

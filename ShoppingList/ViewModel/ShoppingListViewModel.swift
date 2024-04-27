@@ -27,6 +27,7 @@ class ShoppingListViewModel: ObservableObject {
     @Published var isSearching = false
     @Published var showValidationErrorAlert: Bool = false
     @Published var showAddItemSheet: Bool = false
+    @Published var showEditItemSheet: Bool = false
     
     // MARK: - Computed Properties
     var noItemsToDisplay: Bool {
@@ -76,12 +77,13 @@ class ShoppingListViewModel: ObservableObject {
             return
         }
         showAddItemSheet.toggle()
-        switch shoppingListState {
-        case .bought:
-            boughtShoppingListItems.append(newItemToBeAdded)
-        case .notBought:
-            notBoughtShoppingListItems.append(newItemToBeAdded)
-        }
+        notBoughtShoppingListItems.append(newItemToBeAdded)
+//        switch shoppingListState {
+//        case .bought:
+//            boughtShoppingListItems.append(newItemToBeAdded)
+//        case .notBought:
+//            notBoughtShoppingListItems.append(newItemToBeAdded)
+//        }
         updateState()
         self.newItemToBeAdded = createEmptyShoppingItem()
     }
@@ -108,14 +110,18 @@ class ShoppingListViewModel: ObservableObject {
             errorMessage = "Please enter name and quantity."
             return false
         }
-        if !(item.quantity.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil) {
+        if item.name.isEmpty {
+            errorMessage = "Please enter a name."
+            return false
+        }
+        if item.quantity.isEmpty {
+            errorMessage = "Please enter a quantity."
+            return false
+        }
+        if !(item.quantity.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil) && Int(item.quantity) ?? 0 > 0 {
             errorMessage = "Please enter valid quantity."
             return false
         }
-        if !item.name.isEmpty {
-            errorMessage = "Please enter a name."
-            return false
-        } 
         return true
     }
     
@@ -133,6 +139,7 @@ class ShoppingListViewModel: ObservableObject {
             notBoughtShoppingListItems[index] = itemToBeEdited
         }
         updateState()
+        showEditItemSheet.toggle()
         self.itemToBeEdited = createEmptyShoppingItem()
     }
     

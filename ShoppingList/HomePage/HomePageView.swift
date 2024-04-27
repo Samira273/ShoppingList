@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomePageView: View {
     
-    @State private var showEditItemSheet: Bool = false
     @State private var showFilterItemsSheet: Bool = false
     @State private var showSortItemsSheet: Bool = false
     @StateObject private var viewModel = ShoppingListViewModel()
@@ -73,7 +72,7 @@ struct HomePageView: View {
                             .listRowSeparator(.hidden)
                             .onTapGesture {
                                 viewModel.willEdit(item: item)
-                                showEditItemSheet.toggle()
+                                viewModel.showEditItemSheet.toggle()
                             }
                     }
                     .onDelete(perform: viewModel.deleteItem(at:))
@@ -86,7 +85,7 @@ struct HomePageView: View {
             .navigationBarTitleDisplayMode(.automatic)
         }
         
-        .sheet(isPresented: $showEditItemSheet) {
+        .sheet(isPresented: $viewModel.showEditItemSheet) {
             AddItemView(shoppingItem: $viewModel.itemToBeEdited, doneItem: $viewModel.doneEditing).presentationDetents([.medium])
                 .alert(viewModel.errorMessage, isPresented: $viewModel.showValidationErrorAlert) {
                     Button("OK", role: .cancel) { }
