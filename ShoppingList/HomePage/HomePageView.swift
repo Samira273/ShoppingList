@@ -15,8 +15,7 @@ struct HomePageView: View {
     @State private var showSortItemsSheet: Bool = false
     @StateObject private var viewModel = ShoppingListViewModel()
     @FocusState private var searchIsFocused: Bool
-
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -60,14 +59,12 @@ struct HomePageView: View {
                 }
                 List () {
                     ForEach(viewModel.shoppingListItemsToDisplay, id: \.id) { item in
-                        ShoppingItemRowView(item: item, isBoughtToggled: {
-                            viewModel.isBoughtToggled(for: item)
-                        })
-                        .listRowSeparator(.hidden)
-                        .onTapGesture {
-                            viewModel.willEdit(item: item)
-                            showEditItemSheet.toggle()
-                        }
+                        ShoppingItemRowView(item: item, isOn: item.isOn, toggledItem: $viewModel.toggledItem)
+                            .listRowSeparator(.hidden)
+                            .onTapGesture {
+                                viewModel.willEdit(item: item)
+                                showEditItemSheet.toggle()
+                            }
                     }
                     .onDelete(perform: viewModel.deleteItem(at:))
                 }
@@ -104,7 +101,7 @@ struct HomePageView: View {
                     Spacer()
                 }.presentationDetents([.height(140)])
             }
-
+            
         }
         
         .sheet(isPresented: $showSortItemsSheet) {
@@ -118,9 +115,9 @@ struct HomePageView: View {
                 Image(systemName: "plus").foregroundColor(.blue)
                 Button(action: {
                     showAddItemSheet.toggle()
-                    }, label : {
-                        Text("Add New Item").padding(.all, 20).foregroundColor(.blue).bold()
-                    })
+                }, label : {
+                    Text("Add New Item").padding(.all, 20).foregroundColor(.blue).bold()
+                })
                 Spacer()
             }
             .background(Gradient(colors: [.white]))

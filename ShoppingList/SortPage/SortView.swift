@@ -17,7 +17,6 @@ struct SortView: View {
     let ascendingBlackImageName = "sort_ascending_black"
     let descendingWhiteImageName = "sort_descending_white"
     let descendingBlackImageName = "sort_descending_black"
-
     
     var body: some View {
         VStack(spacing: -10) {
@@ -54,7 +53,7 @@ struct SortView: View {
                 .foregroundColor(sortInputs.method == .ascending ? .white : .black)
                 .background(sortInputs.method == .ascending ? Color.blue : Color.clear)
                 .clipShape(RoundedRectangle(cornerRadius: 25))
-
+                
                 Button(action: {
                     sortInputs.method = .descending
                 }) {
@@ -87,8 +86,8 @@ struct SortView: View {
                 Text("Done").bold()
                     .frame(width: 90, height: 50, alignment: .center)
             }).foregroundColor(.white)
-            .background(Color.blue            .clipShape(RoundedRectangle(cornerRadius: 25)))
-            .padding(30)
+                .background(Color.blue            .clipShape(RoundedRectangle(cornerRadius: 25)))
+                .padding(30)
         }
         .padding([.top], -45)
     }

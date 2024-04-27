@@ -20,20 +20,20 @@ struct RadioButtonView: View {
 }
 
 extension RadioButtonView {
-  @ViewBuilder var labelView: some View {
-      Text(title).fontWeight(.semibold)
-  }
-  
-  @ViewBuilder var circleView: some View {
-     Circle()
-          .fill(isSelected ? Color.green: .clear) // Inner circle color
-       .padding(4)
-       .overlay(
-          Circle()
-            .stroke(Color.gray, lineWidth: 1)
-        ) // Circle outline
-       .frame(width: 20, height: 20)
-  }
+    @ViewBuilder var labelView: some View {
+        Text(title).fontWeight(.semibold)
+    }
+    
+    @ViewBuilder var circleView: some View {
+        Circle()
+            .fill(isSelected ? Color.green: .clear) // Inner circle color
+            .padding(4)
+            .overlay(
+                Circle()
+                    .stroke(Color.gray, lineWidth: 1)
+            ) // Circle outline
+            .frame(width: 20, height: 20)
+    }
 }
 
 #Preview {

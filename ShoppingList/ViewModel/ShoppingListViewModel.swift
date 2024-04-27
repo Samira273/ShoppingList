@@ -20,10 +20,12 @@ class ShoppingListViewModel: ObservableObject {
     @Published var doneSortTapped = false
     @Published var doneNewItem = false
     @Published var doneEditing = false
+    @Published var toggledItem = ShoppingItem(name: "", quantity: "", description: "", isOn: false)
+    
     var noItemsToDisplay: Bool {
         notBoughtShoppingListItems.isEmpty && boughtShoppingListItems.isEmpty
     }
-
+    
     
     // MARK: - Private Variables
     @Published private var notBoughtShoppingListItems: [ShoppingItem] = []
@@ -46,10 +48,13 @@ class ShoppingListViewModel: ObservableObject {
     private var doneEditingPublisher: AnyPublisher<Bool, Never> {
         $doneEditing.eraseToAnyPublisher()
     }
-
+    private var toggledItemPublisher: AnyPublisher<ShoppingItem, Never> {
+        $toggledItem.eraseToAnyPublisher()
+    }
+    
     private var cancellable = Set<AnyCancellable>()
-
-
+    
+    
     func addNewItem() {
         guard !newItemToBeAdded.isEmpty else { return }
         switch shoppingListState {
@@ -71,7 +76,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     func willEdit(item: ShoppingItem) {
-       itemToBeEdited = item
+        itemToBeEdited = item
     }
     
     func deleteItem(at offsets: IndexSet) {
@@ -84,7 +89,7 @@ class ShoppingListViewModel: ObservableObject {
         updateState()
     }
     
-    func isBoughtToggled(for item: ShoppingItem) {
+    private func isBoughtToggled(for item: ShoppingItem) {
         var item = item
         switch item.isOn {
         case true: //it is in bought list
@@ -92,7 +97,7 @@ class ShoppingListViewModel: ObservableObject {
             item.isOn.toggle()
             notBoughtShoppingListItems.append(item)
             boughtShoppingListItems.remove(at: index)
-    
+            
         case false: // it is in not Bought list
             guard let index = notBoughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
             item.isOn.toggle()
@@ -184,11 +189,17 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     private func setupPublishers() {
-
+        
+        toggledItemPublisher
+            .sink {[weak self] newValue in
+                guard let self else { return }
+                isBoughtToggled(for: newValue)
+            }.store(in: &cancellable)
+        
         listStatePublisher
             .sink { [weak self] newValue in
                 guard let self else { return }
-               setDisplayListAccordingly(newValue)
+                setDisplayListAccordingly(newValue)
             }
             .store(in: &cancellable)
         
@@ -203,20 +214,21 @@ class ShoppingListViewModel: ObservableObject {
         doneSortPublisher
             .sink { [weak self] newValue in
                 guard let self else { return }
-              endSorting()
+                endSorting()
             }
             .store(in: &cancellable)
         
         doneEditingPublisher
             .sink { [weak self] newValue in
                 guard let self else { return }
-              endEditing()
+                endEditing()
             }
             .store(in: &cancellable)
+        
         doneNewItemPublisher
             .sink { [weak self] newValue in
                 guard let self else { return }
-              addNewItem()
+                addNewItem()
             }
             .store(in: &cancellable)
         
