@@ -195,6 +195,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     private func endSorting() {
+        searchText = ""
         isSorting = true
         switch sortInputs.method {
         case .ascending:
