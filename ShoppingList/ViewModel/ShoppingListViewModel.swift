@@ -35,6 +35,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     // MARK: - Private Variables
+    private var isSorting = false
     var notBoughtShoppingListItems: [ShoppingItem] = []
     var boughtShoppingListItems: [ShoppingItem] = []
     private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
@@ -63,6 +64,12 @@ class ShoppingListViewModel: ObservableObject {
     // MARK: - Init
     init() {
         setupPublishers()
+        fetchData()
+    }
+    
+    // MARK: - Fetch data
+    func fetchData() {
+        // if we have remote fetch from server of fetch data with core data.
     }
     
     //MARK: - Public Functions
@@ -83,12 +90,18 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     
-    func willEdit(item: ShoppingItem) {
+    func willEdit(item: ShoppingItem) { // here is to display the item in the AddNewItemView
         itemToBeEdited = item
     }
     
     func deleteItem(at offsets: IndexSet) {
-        switch shoppingListState {
+        
+        if isSorting || isSearching, let index = offsets.first { // deleting item while searching or sorting is different from normal delete while filtering with bought w not bought
+            deleteItemWhenSortingOrSearching(at: index)
+            return
+        }
+        
+        switch shoppingListState { //normal delete
         case .bought:
             boughtShoppingListItems.remove(atOffsets: offsets)
         case .notBought:
@@ -98,6 +111,22 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     // MARK: - Private Functions
+    
+    private func deleteItemWhenSortingOrSearching(at index: Int) {
+        let item = shoppingListItemsToDisplay.remove(at: index) // we first delete from the display list
+        DispatchQueue.main.async {[weak self] in
+            guard let self else { return }
+            shoppingListItemsToDisplay = shoppingListItemsToDisplay
+        }
+        switch shoppingListState { // search for the item in the current state, delete it from the according list
+        case .bought:
+            guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else {return}
+            boughtShoppingListItems.remove(at: index)
+        case .notBought:
+            guard let index = notBoughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
+            notBoughtShoppingListItems.remove(at: index)
+        }
+    }
     
     private func validateNameAndQuantity(of item: ShoppingItem) -> Bool {
         if item.isEmpty {
@@ -112,7 +141,7 @@ class ShoppingListViewModel: ObservableObject {
             errorMessage = "Please enter a quantity."
             return false
         }
-        if !(item.quantity.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil) && Int(item.quantity) ?? 0 > 0 {
+        if !(item.quantity.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil) || Int(item.quantity) ?? 0 < 1 {
             errorMessage = "Please enter valid quantity."
             return false
         }
@@ -140,12 +169,18 @@ class ShoppingListViewModel: ObservableObject {
     private func searchItems(searchText: String) {
         let list = toSearchList()
         if searchText.isEmpty {
-            shoppingListItemsToDisplay = list
+            DispatchQueue.main.async {[weak self] in
+                guard let self else { return }
+                shoppingListItemsToDisplay = list
+            }
             return
         }
         isSearching = true
         let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
-        shoppingListItemsToDisplay = searchResultList
+        DispatchQueue.main.async {[weak self] in
+            guard let self else { return }
+            shoppingListItemsToDisplay = searchResultList
+        }
     }
     
     private func toSearchList() -> [ShoppingItem] {
@@ -160,6 +195,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     private func endSorting() {
+        isSorting = true
         switch sortInputs.method {
         case .ascending:
             sortAscendingly()
@@ -178,7 +214,10 @@ class ShoppingListViewModel: ObservableObject {
         case .description:
             sortResultList.sort(by: {$0.description < $1.description})
         }
-        shoppingListItemsToDisplay = sortResultList
+        DispatchQueue.main.async {[weak self] in
+            guard let self else { return }
+            shoppingListItemsToDisplay = sortResultList
+        }
     }
     
     private func sortDescendingly() {
@@ -191,7 +230,10 @@ class ShoppingListViewModel: ObservableObject {
         case .description:
             sortResultList.sort(by: {$0.description > $1.description})
         }
-        shoppingListItemsToDisplay = sortResultList
+        DispatchQueue.main.async {[weak self] in
+            guard let self else { return }
+            shoppingListItemsToDisplay = sortResultList
+        }
     }
     
     private func isBoughtToggled(for item: ShoppingItem) {
@@ -223,11 +265,14 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     private func setDisplayListAccordingly(_ state: ShoppingListState? = nil) {
-        switch state ?? shoppingListState {
-        case .bought:
-            shoppingListItemsToDisplay = boughtShoppingListItems
-        case .notBought:
-            shoppingListItemsToDisplay = notBoughtShoppingListItems
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            switch state ?? shoppingListState {
+            case .bought:
+                shoppingListItemsToDisplay = boughtShoppingListItems
+            case .notBought:
+                shoppingListItemsToDisplay = notBoughtShoppingListItems
+            }
         }
     }
     
@@ -235,6 +280,7 @@ class ShoppingListViewModel: ObservableObject {
     private func setupPublishers() {
         
         toggledItemPublisher
+            .dropFirst()
             .sink {[weak self] newValue in
                 guard let self else { return }
                 isBoughtToggled(for: newValue)
@@ -252,6 +298,7 @@ class ShoppingListViewModel: ObservableObject {
                 guard let self else { return }
                 setDisplayListAccordingly(shoppingListState)
                 sortInputs = (.ascending, .name)
+                isSorting = false
             }
             .store(in: &cancellable)
         
@@ -279,6 +326,7 @@ class ShoppingListViewModel: ObservableObject {
             .store(in: &cancellable)
         
         searchTextPublisher
+            .dropFirst()
         //    .debounce(for: .milliseconds(800), scheduler: RunLoop.main) this if we will search remotely on server
             .removeDuplicates()
             .map({ (string) -> String? in
