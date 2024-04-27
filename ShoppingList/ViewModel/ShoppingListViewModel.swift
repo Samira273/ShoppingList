@@ -52,7 +52,7 @@ class ShoppingListViewModel: ObservableObject {
     private var doneNewItemPublisher: AnyPublisher<Bool, Never> {
         $doneNewItem.eraseToAnyPublisher()
     }
-    private var doneEditingPublisher: AnyPublisher<Bool, Never> {
+    var doneEditingPublisher: AnyPublisher<Bool, Never> {
         $doneEditing.eraseToAnyPublisher()
     }
     private var toggledItemPublisher: AnyPublisher<ShoppingItem, Never> {
@@ -78,12 +78,6 @@ class ShoppingListViewModel: ObservableObject {
         }
         showAddItemSheet.toggle()
         notBoughtShoppingListItems.append(newItemToBeAdded)
-//        switch shoppingListState {
-//        case .bought:
-//            boughtShoppingListItems.append(newItemToBeAdded)
-//        case .notBought:
-//            notBoughtShoppingListItems.append(newItemToBeAdded)
-//        }
         updateState()
         self.newItemToBeAdded = createEmptyShoppingItem()
     }

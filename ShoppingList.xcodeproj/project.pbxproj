@@ -15,6 +15,10 @@
 		E56B53742BDA8D8900BB9068 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B53732BDA8D8900BB9068 /* ShoppingListViewModel.swift */; };
 		E57CF1BC2BDBCFE900573C45 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57CF1BB2BDBCFE900573C45 /* RadioButtonView.swift */; };
 		E5B197922BDD3FFE000C8F51 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B53732BDA8D8900BB9068 /* ShoppingListViewModel.swift */; };
+		E5B197972BDD4AF0000C8F51 /* ShoppingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528C2462BD9837B0012D8D0 /* ShoppingItem.swift */; };
+		E5B197982BDD4D4A000C8F51 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D172BDBFB3F00BD8D53 /* SortView.swift */; };
+		E5B197992BDD4D9A000C8F51 /* SortItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D1B2BDC0DDC00BD8D53 /* SortItemView.swift */; };
+		E5B1979A2BDD4DB1000C8F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57A2BD97A23009AD869 /* Assets.xcassets */; };
 		E5E1E5772BD97A22009AD869 /* ShoppingListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1E5762BD97A22009AD869 /* ShoppingListApp.swift */; };
 		E5E1E5792BD97A22009AD869 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1E5782BD97A22009AD869 /* HomePageView.swift */; };
 		E5E1E57B2BD97A23009AD869 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57A2BD97A23009AD869 /* Assets.xcassets */; };
@@ -312,6 +316,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B1979A2BDD4DB1000C8F51 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +350,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B197992BDD4D9A000C8F51 /* SortItemView.swift in Sources */,
+				E5B197982BDD4D4A000C8F51 /* SortView.swift in Sources */,
+				E5B197972BDD4AF0000C8F51 /* ShoppingItem.swift in Sources */,
 				E5B197922BDD3FFE000C8F51 /* ShoppingListViewModel.swift in Sources */,
 				E5E1E5892BD97A23009AD869 /* ShoppingListTests.swift in Sources */,
 			);

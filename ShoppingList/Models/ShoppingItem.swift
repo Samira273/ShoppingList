@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ShoppingItem {
+struct ShoppingItem: Equatable {
     
     let id = UUID().uuidString
     var name: String
