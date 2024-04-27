@@ -77,6 +77,57 @@ final class ShoppingListTests: XCTestCase {
         wait(for: [editItemExpectations], timeout: 1)
         XCTAssertEqual(items, shoppingListViewModel.shoppingListItemsToDisplay)
     }
+    
+    func testToggleIsBought() throws {
+        let toggleItemExpectations = expectation(description: "toggleItemExpectation")
+        addItems()
+        shoppingListViewModel.$toggledItem
+            .dropFirst()
+            .sink { item in
+                toggleItemExpectations.fulfill()
+            }
+              .store(in: &cancellable)
+        shoppingListViewModel.toggledItem = items[4]
+        items[4].isOn = true
+        wait(for: [toggleItemExpectations], timeout: 1)
+        XCTAssertEqual(items.count - 1, shoppingListViewModel.shoppingListItemsToDisplay.count)
+        XCTAssertEqual([items[4]], shoppingListViewModel.boughtShoppingListItems )
+    }
+    
+    func testFilterOnBoughtItems() throws {
+        let boughtFilterItemExpectations = expectation(description: "testFilterOnBoughtItems")
+        addItems()
+        shoppingListViewModel.$shoppingListState
+            .dropFirst(2)
+            .sink { item in
+                boughtFilterItemExpectations.fulfill()
+            }
+              .store(in: &cancellable)
+        shoppingListViewModel.toggledItem = items[4]
+        items[4].isOn = true
+        shoppingListViewModel.shoppingListState = .bought
+        wait(for: [boughtFilterItemExpectations], timeout: 1)
+        XCTAssertEqual([items[4]], shoppingListViewModel.shoppingListItemsToDisplay)
+    }
+    
+    func testDeleteItem() throws { 
+        let deleteItemExpectations = expectation(description: "testdeleteitem")
+        addItems()
+        
+        shoppingListViewModel.$shoppingListState
+            .dropFirst(1)
+            .sink { state in
+                deleteItemExpectations.fulfill()
+                
+            }
+              .store(in: &cancellable)
+
+        var expectedResult = items
+        expectedResult.remove(at: 1)
+        shoppingListViewModel.deleteItem(at: [1])
+        wait(for: [deleteItemExpectations], timeout: 1)
+        XCTAssertEqual(expectedResult, shoppingListViewModel.shoppingListItemsToDisplay)
+    }
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.

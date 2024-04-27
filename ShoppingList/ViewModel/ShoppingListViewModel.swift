@@ -35,8 +35,8 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     // MARK: - Private Variables
-    private var notBoughtShoppingListItems: [ShoppingItem] = []
-    private var boughtShoppingListItems: [ShoppingItem] = []
+    var notBoughtShoppingListItems: [ShoppingItem] = []
+    var boughtShoppingListItems: [ShoppingItem] = []
     private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
         $shoppingListState.eraseToAnyPublisher()
     }
