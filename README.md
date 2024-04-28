@@ -11,4 +11,5 @@ MVVM structure is applied, we'll have homePageView with it's view model and the 
 View model is mainly with combine and it's working with publishers.
 View is built with Swiftui.
 Here's Sample of the app:
+
 ![trial 3](https://github.com/Samira273/ShoppingList/assets/46921426/39d90508-8773-4e07-bfba-3548db1b8176)
