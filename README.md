@@ -6,11 +6,14 @@ Technical details:
 
 This application is developed using:
 
-Xcode 15.3
-Swift 5.2
-It follows the MVVM architecture pattern. The structure comprises a homePageView, its corresponding view model, and the data model stored within the view model.
+- Xcode 15.3
+- Swift 5.2
+- It follows the MVVM architecture pattern. The structure comprises a homePageView, its corresponding view model, and the data model stored within the view model.
 The view model primarily utilizes Combine for reactive programming and works with publishers.
 The user interface is constructed using SwiftUI.
+- UnitTests for add, edit, delete, and filter items functions.
+- UITest for add items.
+
 Sample of the app:
 
 ![trial 3](https://github.com/Samira273/ShoppingList/assets/46921426/39d90508-8773-4e07-bfba-3548db1b8176)
