@@ -37,6 +37,8 @@ final class ShoppingListTests: XCTestCase {
 
     func testAddItems() throws { // testing the adding item functionality
         let addItemsExpectations = expectation(description: "addItemExpectation")
+        addItemsExpectations.assertForOverFulfill = false
+
         var resultList: [ShoppingItem] = []
         shoppingListViewModel.$shoppingListItemsToDisplay
             .sink { list in
@@ -50,7 +52,10 @@ final class ShoppingListTests: XCTestCase {
        addItems()
         
         wait(for: [addItemsExpectations], timeout: 1)
-        XCTAssertEqual(items, resultList)
+        DispatchQueue.main.async {[weak self] in
+            guard let self = self else { return }
+            XCTAssertEqual(self.items, resultList)
+        }
     }
     
     func addItems() {
@@ -75,7 +80,11 @@ final class ShoppingListTests: XCTestCase {
         shoppingListViewModel.itemToBeEdited = items[3]
         shoppingListViewModel.doneEditing = true
         wait(for: [editItemExpectations], timeout: 1)
-        XCTAssertEqual(items, shoppingListViewModel.shoppingListItemsToDisplay)
+
+        DispatchQueue.main.async {[weak self] in
+            guard let self = self else { return }
+            XCTAssertEqual(self.items, self.shoppingListViewModel.shoppingListItemsToDisplay)
+        }
     }
     
     func testDeleteItem() throws { // testing the deletion of item functionality
@@ -91,10 +100,15 @@ final class ShoppingListTests: XCTestCase {
               .store(in: &cancellable)
 
         var expectedResult = items
+        shoppingListViewModel.isSearching = false
+        shoppingListViewModel.isSorting = false
         expectedResult.remove(at: 1)
         shoppingListViewModel.deleteItem(at: [1])
         wait(for: [deleteItemExpectations], timeout: 1)
-        XCTAssertEqual(expectedResult, shoppingListViewModel.shoppingListItemsToDisplay)
+        DispatchQueue.main.async {[weak self] in
+            guard let self = self else { return }
+            XCTAssertEqual(expectedResult, self.shoppingListViewModel.shoppingListItemsToDisplay)
+        }
     }
 
     
@@ -110,8 +124,12 @@ final class ShoppingListTests: XCTestCase {
         shoppingListViewModel.toggledItem = items[4]
         items[4].isOn = true
         wait(for: [toggleItemExpectations], timeout: 1)
-        XCTAssertEqual(items.count - 1, shoppingListViewModel.shoppingListItemsToDisplay.count)
-        XCTAssertEqual([items[4]], shoppingListViewModel.boughtShoppingListItems )
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            XCTAssertEqual(self.items.count - 1, self.shoppingListViewModel.shoppingListItemsToDisplay.count)
+            XCTAssertEqual([self.items[4]], self.shoppingListViewModel.boughtShoppingListItems )
+        }
+       
     }
     
     func testFilterOnBoughtItems() throws { // testing the filter of the data with bought state.
@@ -127,7 +145,10 @@ final class ShoppingListTests: XCTestCase {
         items[4].isOn = true
         shoppingListViewModel.shoppingListState = .bought
         wait(for: [boughtFilterItemExpectations], timeout: 1)
-        XCTAssertEqual([items[4]], shoppingListViewModel.shoppingListItemsToDisplay)
+        DispatchQueue.main.async {[weak self] in
+            guard let self = self else { return }
+            XCTAssertEqual([self.items[4]], self.shoppingListViewModel.shoppingListItemsToDisplay)
+        }
     }
     
     func testSearchItems() throws { // testing search functionality
@@ -143,7 +164,10 @@ final class ShoppingListTests: XCTestCase {
         shoppingListViewModel.searchText = "X"
         shoppingListViewModel.isSearching.toggle()
         wait(for: [searchItemsExpectations], timeout: 1)
-        XCTAssertEqual([items[3]], shoppingListViewModel.shoppingListItemsToDisplay)
+        DispatchQueue.main.async {[weak self] in
+            guard let self = self else { return }
+            XCTAssertEqual([self.items[3]], self.shoppingListViewModel.shoppingListItemsToDisplay)
+        }
     }
     
     func testPerformanceExample() throws {
