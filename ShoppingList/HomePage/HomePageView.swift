@@ -107,14 +107,18 @@ struct HomePageView: View {
                         .onTapGesture {
                             clearAndResignSearchTextField()
                             showFilterItemsSheet.toggle()
-                            viewModel.shoppingListState = .bought
+                            DispatchQueue.main.async {
+                                self.viewModel.shoppingListState = .bought
+                            }
                         }
                     Spacer()
                     RadioButtonView(title: "Not Bought", isSelected: viewModel.shoppingListState == .notBought ? true : false)
                         .onTapGesture {
                             clearAndResignSearchTextField()
                             showFilterItemsSheet.toggle()
-                            viewModel.shoppingListState = .notBought
+                            DispatchQueue.main.async {
+                                viewModel.shoppingListState = .notBought
+                            }
                         }
                     Spacer()
                 }.presentationDetents([.height(140)])

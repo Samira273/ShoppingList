@@ -84,7 +84,7 @@ class ShoppingListViewModel: ObservableObject {
             return
         }
         showAddItemSheet.toggle()
-        notBoughtShoppingListItems.append(newItemToBeAdded)
+        notBoughtShoppingListItems.insert(newItemToBeAdded, at: 0)
         updateState()
         self.newItemToBeAdded = createEmptyShoppingItem()
     }
@@ -243,13 +243,13 @@ class ShoppingListViewModel: ObservableObject {
         case true: //it is in bought list
             guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
             item.isOn.toggle()
-            notBoughtShoppingListItems.append(item)
+            notBoughtShoppingListItems.insert(item, at: 0)
             boughtShoppingListItems.remove(at: index)
             
         case false: // it is in not Bought list
             guard let index = notBoughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else { return }
             item.isOn.toggle()
-            boughtShoppingListItems.append(item)
+            boughtShoppingListItems.insert(item, at: 0)
             notBoughtShoppingListItems.remove(at: index)
         }
         if isSearching {
@@ -262,7 +262,10 @@ class ShoppingListViewModel: ObservableObject {
     //MARK: - Helping functions, remove redundant code with calling them
     
     private func updateState(_ state: ShoppingListState? = nil) {
-        shoppingListState = state ?? shoppingListState
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.shoppingListState = state ?? self.shoppingListState
+        }
     }
     
     private func setDisplayListAccordingly(_ state: ShoppingListState? = nil) {
