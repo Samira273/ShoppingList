@@ -68,7 +68,7 @@ struct HomePageView: View {
                 }
                 List () {
                     ForEach(viewModel.shoppingListItemsToDisplay, id: \.id) { item in
-                        ShoppingItemRowView(item: item, isOn: item.isOn, toggledItem: $viewModel.toggledItem)
+                        ShoppingItemRowView(item: item, toggledItem: $viewModel.toggledItem)
                             .listRowSeparator(.hidden)
                             .onTapGesture {
                                 viewModel.willEdit(item: item)
@@ -97,7 +97,6 @@ struct HomePageView: View {
                     Button("OK", role: .cancel) { }
                 }
         }
-        
         .sheet(isPresented: $showFilterItemsSheet) {
             VStack {
                 Text("Filter By").bold().font(.title)
@@ -125,12 +124,10 @@ struct HomePageView: View {
             }
             
         }
-        
         .sheet(isPresented: $showSortItemsSheet) {
             SortView(sortInputs: $viewModel.sortInputs, doneSortingTapped: $viewModel.doneSortTapped, clearTapped: $viewModel.clearSortTapped)
                 .presentationDetents([.medium])
         }
-        
         .safeAreaInset(edge: VerticalEdge.bottom) {
             HStack(spacing: -15) {
                 Spacer()

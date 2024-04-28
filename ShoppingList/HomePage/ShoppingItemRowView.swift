@@ -10,14 +10,13 @@ import SwiftUI
 struct ShoppingItemRowView: View {
     
     let item: ShoppingItem
-    @State var isOn: Bool 
     @Binding var toggledItem: ShoppingItem
 
     var body: some View {
         VStack (spacing: 0) {
             HStack (spacing: 50) {
                 Text(item.quantity + "x " + item.name).bold()
-                Toggle("", isOn: $isOn)
+                Toggle("", isOn: .constant(item.isOn))
                     .onTapGesture {
                         toggledItem = item
                     } // here's to override the tap gesture of row selection
@@ -42,7 +41,7 @@ struct ShoppingItemRowView: View {
     struct Preview: View {
         @State var shoppingItem = ShoppingItem(name: "lorem", quantity: "1", description: "ibson", isOn: false)
         var body: some View {
-            ShoppingItemRowView(item: ShoppingItem(name: "lorem", quantity: "1", description: "ibson", isOn: false), isOn: false, toggledItem: $shoppingItem)
+            ShoppingItemRowView(item: ShoppingItem(name: "lorem", quantity: "1", description: "ibson", isOn: false), toggledItem: $shoppingItem)
         }
     }
     return Preview()

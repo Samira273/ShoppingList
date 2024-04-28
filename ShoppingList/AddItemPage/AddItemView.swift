@@ -38,6 +38,7 @@ struct AddItemView: View {
                     HStack {
                         Text(getTextFieldTitle(index: index)).fontWeight(.semibold)
                         TextField("", text: getBindingFor(index: index)!, axis: .vertical)
+                            .frame(width: 150)
                             .disableAutocorrection(true)
                             .multilineTextAlignment(.leading).padding(10).keyboardType(getKeyboardType(index: index))
                     }
