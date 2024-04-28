@@ -35,7 +35,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     // MARK: - Private Variables
-    private var isSorting = false
+    var isSorting = false
     var notBoughtShoppingListItems: [ShoppingItem] = []
     var boughtShoppingListItems: [ShoppingItem] = []
     private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
@@ -115,8 +115,8 @@ class ShoppingListViewModel: ObservableObject {
     private func deleteItemWhenSortingOrSearching(at index: Int) {
         let item = shoppingListItemsToDisplay.remove(at: index) // we first delete from the display list
         DispatchQueue.main.async {[weak self] in
-            guard let self else { return }
-            shoppingListItemsToDisplay = shoppingListItemsToDisplay
+            guard let self = self else { return }
+            self.shoppingListItemsToDisplay = self.shoppingListItemsToDisplay
         }
         switch shoppingListState { // search for the item in the current state, delete it from the according list
         case .bought:
@@ -170,16 +170,16 @@ class ShoppingListViewModel: ObservableObject {
         let list = toSearchList()
         if searchText.isEmpty {
             DispatchQueue.main.async {[weak self] in
-                guard let self else { return }
-                shoppingListItemsToDisplay = list
+                guard let self = self else { return }
+                self.shoppingListItemsToDisplay = list
             }
             return
         }
         isSearching = true
         let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
         DispatchQueue.main.async {[weak self] in
-            guard let self else { return }
-            shoppingListItemsToDisplay = searchResultList
+            guard let self = self else { return }
+            self.shoppingListItemsToDisplay = searchResultList
         }
     }
     
@@ -215,8 +215,8 @@ class ShoppingListViewModel: ObservableObject {
             sortResultList.sort(by: {$0.description < $1.description})
         }
         DispatchQueue.main.async {[weak self] in
-            guard let self else { return }
-            shoppingListItemsToDisplay = sortResultList
+            guard let self = self else { return }
+            self.shoppingListItemsToDisplay = sortResultList
         }
     }
     
@@ -231,8 +231,8 @@ class ShoppingListViewModel: ObservableObject {
             sortResultList.sort(by: {$0.description > $1.description})
         }
         DispatchQueue.main.async {[weak self] in
-            guard let self else { return }
-            shoppingListItemsToDisplay = sortResultList
+            guard let self = self else { return }
+            self.shoppingListItemsToDisplay = sortResultList
         }
     }
     
@@ -266,12 +266,12 @@ class ShoppingListViewModel: ObservableObject {
     
     private func setDisplayListAccordingly(_ state: ShoppingListState? = nil) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            switch state ?? shoppingListState {
+            guard let self = self else { return }
+            switch state ?? self.shoppingListState {
             case .bought:
-                shoppingListItemsToDisplay = boughtShoppingListItems
+                self.shoppingListItemsToDisplay = self.boughtShoppingListItems
             case .notBought:
-                shoppingListItemsToDisplay = notBoughtShoppingListItems
+                self.shoppingListItemsToDisplay = self.notBoughtShoppingListItems
             }
         }
     }
@@ -282,46 +282,46 @@ class ShoppingListViewModel: ObservableObject {
         toggledItemPublisher
             .dropFirst()
             .sink {[weak self] newValue in
-                guard let self else { return }
-                isBoughtToggled(for: newValue)
+                guard let self = self else { return }
+                self.isBoughtToggled(for: newValue)
             }.store(in: &cancellable)
         
         listStatePublisher
             .sink { [weak self] newValue in
-                guard let self else { return }
-                setDisplayListAccordingly(newValue)
+                guard let self = self else { return }
+                self.setDisplayListAccordingly(newValue)
             }
             .store(in: &cancellable)
         
         clearSortPublisher
             .sink { [weak self] newValue in
-                guard let self else { return }
-                setDisplayListAccordingly(shoppingListState)
-                sortInputs = (.ascending, .name)
-                isSorting = false
+                guard let self = self else { return }
+                self.setDisplayListAccordingly(self.shoppingListState)
+                self.sortInputs = (.ascending, .name)
+                self.isSorting = false
             }
             .store(in: &cancellable)
         
         doneSortPublisher
             .sink { [weak self] newValue in
-                guard let self else { return }
-                endSorting()
+                guard let self = self else { return }
+                self.endSorting()
             }
             .store(in: &cancellable)
         
         doneEditingPublisher
             .dropFirst()
             .sink { [weak self] newValue in
-                guard let self else { return }
-                endEditing()
+                guard let self = self else { return }
+                self.endEditing()
             }
             .store(in: &cancellable)
         
         doneNewItemPublisher
             .dropFirst()
             .sink { [weak self] newValue in
-                guard let self else { return }
-                addNewItem()
+                guard let self = self else { return }
+                self.addNewItem()
             }
             .store(in: &cancellable)
         
