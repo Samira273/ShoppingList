@@ -92,13 +92,13 @@ final class ShoppingListTests: XCTestCase {
         addItems()
         
         shoppingListViewModel.$shoppingListState
-            .dropFirst(6) // this because state is triggered upon init, and when adding 5 items of the list, the 6th change here is for the delete.
+            .dropFirst(1)
             .sink { state in
                 deleteItemExpectations.fulfill()
                 
             }
-              .store(in: &cancellable)
-
+            .store(in: &cancellable)
+        
         var expectedResult = items
         shoppingListViewModel.isSearching = false
         shoppingListViewModel.isSorting = false
@@ -107,7 +107,7 @@ final class ShoppingListTests: XCTestCase {
         wait(for: [deleteItemExpectations], timeout: 1)
         DispatchQueue.main.async {[weak self] in
             guard let self = self else { return }
-            XCTAssertEqual(expectedResult, self.shoppingListViewModel.shoppingListItemsToDisplay)
+            XCTAssertEqual(expectedResult, shoppingListViewModel.shoppingListItemsToDisplay)
         }
     }
 
@@ -136,7 +136,7 @@ final class ShoppingListTests: XCTestCase {
         let boughtFilterItemExpectations = expectation(description: "testFilterOnBoughtItems")
         addItems()
         shoppingListViewModel.$shoppingListState
-            .dropFirst(7)
+            .dropFirst(2)
             .sink { item in
                 boughtFilterItemExpectations.fulfill()
             }
