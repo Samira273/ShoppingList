@@ -92,13 +92,15 @@ struct HomePageView: View {
                 }
         }
         .sheet(isPresented: $viewModel.showAddItemSheet) {
-            AddItemView(shoppingItem: $viewModel.newItemToBeAdded, doneItem: $viewModel.doneNewItem).presentationDetents([.medium])
+            UIApplication.shared.endEditing()
+            return AddItemView(shoppingItem: $viewModel.newItemToBeAdded, doneItem: $viewModel.doneNewItem).presentationDetents([.medium])
                 .alert(viewModel.errorMessage, isPresented: $viewModel.showValidationErrorAlert) {
                     Button("OK", role: .cancel) { }
                 }
         }
         .sheet(isPresented: $showFilterItemsSheet) {
-            VStack {
+            UIApplication.shared.endEditing()
+            return VStack {
                 Text("Filter By").bold().font(.title)
                 HStack(alignment: .top, spacing: 10) {
                     Spacer()
@@ -125,7 +127,9 @@ struct HomePageView: View {
             
         }
         .sheet(isPresented: $showSortItemsSheet) {
-            SortView(sortInputs: $viewModel.sortInputs, doneSortingTapped: $viewModel.doneSortTapped, clearTapped: $viewModel.clearSortTapped)
+            UIApplication.shared.endEditing()
+
+            return SortView(sortInputs: $viewModel.sortInputs, doneSortingTapped: $viewModel.doneSortTapped, clearTapped: $viewModel.clearSortTapped)
                 .presentationDetents([.medium])
         }
         .safeAreaInset(edge: VerticalEdge.bottom) {
@@ -155,4 +159,11 @@ struct HomePageView: View {
 
 #Preview {
     HomePageView()
+}
+
+
+extension UIApplication {
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
