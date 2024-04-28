@@ -92,7 +92,7 @@ final class ShoppingListTests: XCTestCase {
         addItems()
         
         shoppingListViewModel.$shoppingListState
-            .dropFirst(1)
+            .dropFirst(6) // this because state is triggered upon init, and when adding 5 items of the list, the 6th change here is for the delete.
             .sink { state in
                 deleteItemExpectations.fulfill()
                 
