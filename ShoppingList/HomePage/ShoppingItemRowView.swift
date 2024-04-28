@@ -10,7 +10,6 @@ import SwiftUI
 struct ShoppingItemRowView: View {
     
     let item: ShoppingItem
-//    @State var isOn: Bool 
     @Binding var toggledItem: ShoppingItem
 
     var body: some View {
