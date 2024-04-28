@@ -92,7 +92,6 @@ struct HomePageView: View {
                 }
         }
         .sheet(isPresented: $viewModel.showAddItemSheet) {
-            UIApplication.shared.endEditing()
             return AddItemView(shoppingItem: $viewModel.newItemToBeAdded, doneItem: $viewModel.doneNewItem).presentationDetents([.medium])
                 .alert(viewModel.errorMessage, isPresented: $viewModel.showValidationErrorAlert) {
                     Button("OK", role: .cancel) { }
