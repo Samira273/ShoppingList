@@ -175,7 +175,7 @@ class ShoppingListViewModel: ObservableObject {
             return
         }
         isSearching = true
-        let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
+        let searchResultList = list.filter({$0.description.contains(searchText.lowercased()) || $0.name.contains(searchText.lowercased())})
         shoppingListItemsToDisplay = searchResultList
     }
     
