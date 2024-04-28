@@ -36,8 +36,8 @@ class ShoppingListViewModel: ObservableObject {
     
     // MARK: - Private Variables
     private var isSorting = false
-    private var notBoughtShoppingListItems: [ShoppingItem] = []
-    private var boughtShoppingListItems: [ShoppingItem] = []
+    var notBoughtShoppingListItems: [ShoppingItem] = []
+    var boughtShoppingListItems: [ShoppingItem] = []
     private var listStatePublisher: AnyPublisher<ShoppingListState, Never> {
         $shoppingListState.eraseToAnyPublisher()
     }
@@ -53,7 +53,7 @@ class ShoppingListViewModel: ObservableObject {
     private var doneNewItemPublisher: AnyPublisher<Bool, Never> {
         $doneNewItem.eraseToAnyPublisher()
     }
-    private var doneEditingPublisher: AnyPublisher<Bool, Never> {
+    var doneEditingPublisher: AnyPublisher<Bool, Never> {
         $doneEditing.eraseToAnyPublisher()
     }
     private var toggledItemPublisher: AnyPublisher<ShoppingItem, Never> {
@@ -195,6 +195,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     private func endSorting() {
+        searchText = ""
         isSorting = true
         switch sortInputs.method {
         case .ascending:

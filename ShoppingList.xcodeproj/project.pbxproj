@@ -15,23 +15,10 @@
 		E56B53742BDA8D8900BB9068 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B53732BDA8D8900BB9068 /* ShoppingListViewModel.swift */; };
 		E57CF1BC2BDBCFE900573C45 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57CF1BB2BDBCFE900573C45 /* RadioButtonView.swift */; };
 		E5B197922BDD3FFE000C8F51 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B53732BDA8D8900BB9068 /* ShoppingListViewModel.swift */; };
-		E5B1979B2BDD90FA000C8F51 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1E5782BD97A22009AD869 /* HomePageView.swift */; };
-		E5B1979D2BDD932B000C8F51 /* ShoppingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528C2462BD9837B0012D8D0 /* ShoppingItem.swift */; };
-		E5B1979E2BDD9368000C8F51 /* ShoppingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528C2462BD9837B0012D8D0 /* ShoppingItem.swift */; };
-		E5B1979F2BDD9378000C8F51 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D172BDBFB3F00BD8D53 /* SortView.swift */; };
-		E5B197A02BDD9379000C8F51 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D172BDBFB3F00BD8D53 /* SortView.swift */; };
-		E5B197A12BDD93A6000C8F51 /* SortItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D1B2BDC0DDC00BD8D53 /* SortItemView.swift */; };
-		E5B197A22BDD93A6000C8F51 /* SortItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D1B2BDC0DDC00BD8D53 /* SortItemView.swift */; };
-		E5B197A32BDD93AC000C8F51 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B536F2BDA4D9B00BB9068 /* AddItemView.swift */; };
-		E5B197A42BDD93AD000C8F51 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B536F2BDA4D9B00BB9068 /* AddItemView.swift */; };
-		E5B197A52BDD93B1000C8F51 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57CF1BB2BDBCFE900573C45 /* RadioButtonView.swift */; };
-		E5B197A62BDD93B2000C8F51 /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57CF1BB2BDBCFE900573C45 /* RadioButtonView.swift */; };
-		E5B197A72BDD93CA000C8F51 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56B53732BDA8D8900BB9068 /* ShoppingListViewModel.swift */; };
-		E5B197A92BDD93D9000C8F51 /* ShoppingItemRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528C2442BD9834B0012D8D0 /* ShoppingItemRowView.swift */; };
-		E5B197AA2BDD93E6000C8F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57A2BD97A23009AD869 /* Assets.xcassets */; };
-		E5B197AB2BDD9404000C8F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57A2BD97A23009AD869 /* Assets.xcassets */; };
-		E5B197AC2BDD940D000C8F51 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57E2BD97A23009AD869 /* Preview Assets.xcassets */; };
-		E5B197AD2BDD940E000C8F51 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57E2BD97A23009AD869 /* Preview Assets.xcassets */; };
+		E5B197972BDD4AF0000C8F51 /* ShoppingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E528C2462BD9837B0012D8D0 /* ShoppingItem.swift */; };
+		E5B197982BDD4D4A000C8F51 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D172BDBFB3F00BD8D53 /* SortView.swift */; };
+		E5B197992BDD4D9A000C8F51 /* SortItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5142D1B2BDC0DDC00BD8D53 /* SortItemView.swift */; };
+		E5B1979A2BDD4DB1000C8F51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57A2BD97A23009AD869 /* Assets.xcassets */; };
 		E5E1E5772BD97A22009AD869 /* ShoppingListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1E5762BD97A22009AD869 /* ShoppingListApp.swift */; };
 		E5E1E5792BD97A22009AD869 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E1E5782BD97A22009AD869 /* HomePageView.swift */; };
 		E5E1E57B2BD97A23009AD869 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E1E57A2BD97A23009AD869 /* Assets.xcassets */; };
@@ -329,8 +316,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5B197AC2BDD940D000C8F51 /* Preview Assets.xcassets in Resources */,
-				E5B197AB2BDD9404000C8F51 /* Assets.xcassets in Resources */,
+				E5B1979A2BDD4DB1000C8F51 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,8 +324,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5B197AD2BDD940E000C8F51 /* Preview Assets.xcassets in Resources */,
-				E5B197AA2BDD93E6000C8F51 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,11 +350,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5B197A12BDD93A6000C8F51 /* SortItemView.swift in Sources */,
-				E5B197A32BDD93AC000C8F51 /* AddItemView.swift in Sources */,
-				E5B197A52BDD93B1000C8F51 /* RadioButtonView.swift in Sources */,
-				E5B1979F2BDD9378000C8F51 /* SortView.swift in Sources */,
-				E5B1979E2BDD9368000C8F51 /* ShoppingItem.swift in Sources */,
+				E5B197992BDD4D9A000C8F51 /* SortItemView.swift in Sources */,
+				E5B197982BDD4D4A000C8F51 /* SortView.swift in Sources */,
+				E5B197972BDD4AF0000C8F51 /* ShoppingItem.swift in Sources */,
 				E5B197922BDD3FFE000C8F51 /* ShoppingListViewModel.swift in Sources */,
 				E5E1E5892BD97A23009AD869 /* ShoppingListTests.swift in Sources */,
 			);
@@ -381,15 +363,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5E1E5952BD97A23009AD869 /* ShoppingListUITestsLaunchTests.swift in Sources */,
-				E5B197A22BDD93A6000C8F51 /* SortItemView.swift in Sources */,
-				E5B197A92BDD93D9000C8F51 /* ShoppingItemRowView.swift in Sources */,
-				E5B197A42BDD93AD000C8F51 /* AddItemView.swift in Sources */,
-				E5B1979B2BDD90FA000C8F51 /* HomePageView.swift in Sources */,
-				E5B197A72BDD93CA000C8F51 /* ShoppingListViewModel.swift in Sources */,
-				E5B1979D2BDD932B000C8F51 /* ShoppingItem.swift in Sources */,
 				E5E1E5932BD97A23009AD869 /* ShoppingListUITests.swift in Sources */,
-				E5B197A62BDD93B2000C8F51 /* RadioButtonView.swift in Sources */,
-				E5B197A02BDD9379000C8F51 /* SortView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
