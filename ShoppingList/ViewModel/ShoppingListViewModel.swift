@@ -204,16 +204,16 @@ class ShoppingListViewModel: ObservableObject {
             sortDescendingly()
         }
     }
-
+    
     private func sortAscendingly() {
         var sortResultList = shoppingListItemsToDisplay
         switch sortInputs.criteria {
         case .name:
-            sortResultList.sort(by: {$0.name < $1.name})
+            sortResultList.sort(by: {$0.name.lowercased() < $1.name.lowercased()})
         case .quantity:
             sortResultList.sort(by: {Int($0.quantity) ?? 0 < Int($1.quantity) ?? 0})
         case .description:
-            sortResultList.sort(by: {$0.description < $1.description})
+            sortResultList.sort(by: {$0.description.lowercased() < $1.description.lowercased()})
         }
         DispatchQueue.main.async {[weak self] in
             guard let self = self else { return }
