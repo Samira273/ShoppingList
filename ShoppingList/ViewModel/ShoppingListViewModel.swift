@@ -119,10 +119,7 @@ class ShoppingListViewModel: ObservableObject {
     
     private func deleteItemWhenSortingOrSearching(at index: Int) {
         let item = shoppingListItemsToDisplay.remove(at: index) // we first delete from the display list
-        DispatchQueue.main.async {[weak self] in
-            guard let self = self else { return }
-            self.shoppingListItemsToDisplay = self.shoppingListItemsToDisplay
-        }
+        shoppingListItemsToDisplay = self.shoppingListItemsToDisplay
         switch shoppingListState { // search for the item in the current state, delete it from the according list
         case .bought:
             guard let index = boughtShoppingListItems.firstIndex(where: {$0.id == item.id}) else {return}
@@ -174,18 +171,12 @@ class ShoppingListViewModel: ObservableObject {
     private func searchItems(searchText: String) {
         let list = toSearchList()
         if searchText.isEmpty {
-            DispatchQueue.main.async {[weak self] in
-                guard let self = self else { return }
-                self.shoppingListItemsToDisplay = list
-            }
+            shoppingListItemsToDisplay = list
             return
         }
         isSearching = true
         let searchResultList = list.filter({$0.description.contains(searchText) || $0.name.contains(searchText)})
-        DispatchQueue.main.async {[weak self] in
-            guard let self = self else { return }
-            self.shoppingListItemsToDisplay = searchResultList
-        }
+        shoppingListItemsToDisplay = searchResultList
     }
     
     private func toSearchList() -> [ShoppingItem] {
@@ -220,10 +211,7 @@ class ShoppingListViewModel: ObservableObject {
         case .description:
             sortResultList.sort(by: {$0.description.lowercased() < $1.description.lowercased()})
         }
-        DispatchQueue.main.async {[weak self] in
-            guard let self = self else { return }
-            self.shoppingListItemsToDisplay = sortResultList
-        }
+        shoppingListItemsToDisplay = sortResultList
     }
     
     private func sortDescendingly() {
@@ -236,10 +224,7 @@ class ShoppingListViewModel: ObservableObject {
         case .description:
             sortResultList.sort(by: {$0.description > $1.description})
         }
-        DispatchQueue.main.async {[weak self] in
-            guard let self = self else { return }
-            self.shoppingListItemsToDisplay = sortResultList
-        }
+        shoppingListItemsToDisplay = sortResultList
     }
     
     private func isBoughtToggled(for item: ShoppingItem) {
@@ -267,21 +252,15 @@ class ShoppingListViewModel: ObservableObject {
     //MARK: - Helping functions, remove redundant code with calling them
     
     private func updateState(_ state: ShoppingListState? = nil) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.shoppingListState = state ?? self.shoppingListState
-        }
+        shoppingListState = state ?? self.shoppingListState
     }
     
     private func setDisplayListAccordingly(_ state: ShoppingListState? = nil) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            switch state ?? self.shoppingListState {
-            case .bought:
-                self.shoppingListItemsToDisplay = self.boughtShoppingListItems
-            case .notBought:
-                self.shoppingListItemsToDisplay = self.notBoughtShoppingListItems
-            }
+        switch state ?? shoppingListState {
+        case .bought:
+            shoppingListItemsToDisplay = boughtShoppingListItems
+        case .notBought:
+            shoppingListItemsToDisplay = notBoughtShoppingListItems
         }
     }
     
