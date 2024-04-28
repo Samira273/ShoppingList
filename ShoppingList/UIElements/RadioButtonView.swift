@@ -26,12 +26,12 @@ extension RadioButtonView {
     
     @ViewBuilder var circleView: some View {
         Circle()
-            .fill(isSelected ? Color.green: .clear) // Inner circle color
+            .fill(isSelected ? Color.green: .clear)
             .padding(4)
             .overlay(
                 Circle()
                     .stroke(Color.gray, lineWidth: 1)
-            ) // Circle outline
+            )
             .frame(width: 20, height: 20)
     }
 }

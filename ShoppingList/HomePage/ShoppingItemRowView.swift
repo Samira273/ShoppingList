@@ -19,7 +19,6 @@ struct ShoppingItemRowView: View {
                 Text(item.quantity + "x " + item.name).bold()
                 Toggle("", isOn: $isOn)
                     .onTapGesture {
-                     //   self.isBoughtToggled()
                         toggledItem = item
                     } // here's to override the tap gesture of row selection
                       .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
