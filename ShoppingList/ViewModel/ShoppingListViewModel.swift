@@ -85,7 +85,12 @@ class ShoppingListViewModel: ObservableObject {
         }
         showAddItemSheet.toggle()
         notBoughtShoppingListItems.insert(newItemToBeAdded, at: 0)
-        updateState()
+        if doneSortTapped, shoppingListState == .notBought {
+            self.shoppingListItemsToDisplay.insert(newItemToBeAdded, at: 0)
+            self.endSorting()
+        } else {
+            updateState()
+        }
         self.newItemToBeAdded = createEmptyShoppingItem()
     }
     
