@@ -1,15 +1,16 @@
 # ShoppingList
-It's a simple SwiftUI/Combine App that takes items to be bought from User (Name, Quantity, Description) and saves them locally (for now), And it allaws the user to edit this item later on, mark it as bought, delete it.
-There's a search in the displayed list by key word, searching in the description and the name fields.
-There's Sorting that allaws the user to choose ascending or descing and the sorting criteria which is name, quantity, or desciption.
 
-Techninal Documentation:
-This app is build using:
-- XCode 15.3
-- Swift 5.2
-MVVM structure is applied, we'll have homePageView with it's view model and the model of the data stored in the view Model.
-View model is mainly with combine and it's working with publishers.
-View is built with Swiftui.
-Here's Sample of the app:
+This is a straightforward SwiftUI/Combine application designed for managing shopping items inputted by the user (including Name, Quantity, and Description), which are then stored locally. The app enables users to later edit these items, mark them as purchased, or delete them. Additionally, users can search the displayed list using keywords that are matched against both the description and name fields. Sorting functionality is also included, allowing users to choose between ascending or descending order and select the sorting criteria (name, quantity, or description).
+
+Technical details:
+
+This application is developed using:
+
+Xcode 15.3
+Swift 5.2
+It follows the MVVM architecture pattern. The structure comprises a homePageView, its corresponding view model, and the data model stored within the view model.
+The view model primarily utilizes Combine for reactive programming and works with publishers.
+The user interface is constructed using SwiftUI.
+Sample of the app:
 
 ![trial 3](https://github.com/Samira273/ShoppingList/assets/46921426/39d90508-8773-4e07-bfba-3548db1b8176)
