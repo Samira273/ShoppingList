@@ -136,7 +136,7 @@ final class ShoppingListTests: XCTestCase {
         let boughtFilterItemExpectations = expectation(description: "testFilterOnBoughtItems")
         addItems()
         shoppingListViewModel.$shoppingListState
-            .dropFirst(2)
+            .dropFirst(7)
             .sink { item in
                 boughtFilterItemExpectations.fulfill()
             }
